@@ -1,2 +1,10 @@
 .idea
 voxplorer_backend/__pycache__/
+.env
+# ignore all pycache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
