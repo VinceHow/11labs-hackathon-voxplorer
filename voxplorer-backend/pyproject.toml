@@ -19,8 +19,8 @@ twilio = "^8.12.0"
 websockets = "^12.0"
 google-cloud-vision = "^3.10.0"
 openai = "^1.63.2"
-elevenlabs = "^1.51.0"
 python-multipart = "^0.0.20"
+elevenlabs = "^1.51.0"
 
 [build-system]
 requires = ["poetry-core"]

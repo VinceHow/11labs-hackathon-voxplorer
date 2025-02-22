@@ -5,7 +5,7 @@ from openai import OpenAI
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-credentials_path = os.path.join(current_dir, '..', '..', 'google-credentials.json')
+credentials_path = os.path.join(current_dir, '..', '..', 'g-credential.json')
 # Initialize Google Vision client
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credentials_path
 vision_client = vision.ImageAnnotatorClient()
