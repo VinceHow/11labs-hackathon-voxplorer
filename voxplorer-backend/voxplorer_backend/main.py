@@ -3,10 +3,10 @@ from agent import planner, route_planner
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
-from .services.elevenlabs_service import ElevenLabsService
-from .services.make_service import MakeService
-from .services.google_service import GoogleService
-from .models.requests import TextToSpeechRequest, WebhookRequest
+from voxplorer_backend.services.elevenlabs_service import ElevenLabsService
+from voxplorer_backend.services.make_service import MakeService
+from voxplorer_backend.services.google_service import GoogleService
+from voxplorer_backend.models.requests import TextToSpeechRequest, WebhookRequest
 from dotenv import load_dotenv
 
 load_dotenv()
