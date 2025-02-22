@@ -8,7 +8,7 @@ from voxplorer_backend.models.requests import TextToSpeechRequest, WebhookReques
 from voxplorer_backend.services.twilio_service import TwilioService, forward_audio
 from dotenv import load_dotenv
 from voxplorer_backend.agent import route_planner
-from agent.ImageSummaryService import ImageSummaryService
+from voxplorer_backend.agent.ImageSummaryService import ImageSummaryService
 from voxplorer_backend.agent import planner
 import os
 import asyncio
