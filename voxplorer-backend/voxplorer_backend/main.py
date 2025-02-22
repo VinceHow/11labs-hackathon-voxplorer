@@ -8,6 +8,7 @@ from voxplorer_backend.models.requests import TextToSpeechRequest, WebhookReques
 from voxplorer_backend.services.twilio_service import TwilioService
 from dotenv import load_dotenv
 from voxplorer_backend.agent import route_planner
+from agent import planner
 
 load_dotenv()
 import uvicorn

@@ -4,6 +4,7 @@ import { ChevronDown } from "lucide-react";
 import FeatureCards from "@/components/FeatureCards";
 import TravelPlan from "@/components/TravelPlan";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "@/config/api";
 
 interface Schedule {
   time: string;
