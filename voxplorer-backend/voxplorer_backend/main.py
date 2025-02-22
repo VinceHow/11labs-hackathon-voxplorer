@@ -1,4 +1,5 @@
-from fastapi import FastAPI, Request, HTTPException
+from agent import planner
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from .services.elevenlabs_service import ElevenLabsService
 from .services.make_service import MakeService
@@ -7,16 +8,22 @@ from .models.requests import TextToSpeechRequest, WebhookRequest
 from dotenv import load_dotenv
 
 load_dotenv()
-
+import uvicorn
 app = FastAPI()
 
-# Add CORS middleware
+origins = [
+    "http://localhost:8080",    # Your frontend URL
+    "http://127.0.0.1:8080",
+    "http://localhost:3000",    # Common React development port
+    "http://127.0.0.1:3000",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, replace with your frontend URL
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=origins,      # List of allowed origins
+    allow_credentials=True,     # Allow cookies
+    allow_methods=["*"],        # Allow all methods
+    allow_headers=["*"],        # Allow all headers
 )
 
 # Initialize services
@@ -26,7 +33,11 @@ google_service = GoogleService()
 
 @app.get("/")
 def read_root():
-    return {"status": "healthy"}
+    return {"Hello": "World"}
+
+@app.get("/api/travel-plans")
+def read_root():
+    return planner.get_all_plan("demo")
 
 @app.post("/api/tts")
 async def text_to_speech(request: TextToSpeechRequest):
@@ -56,3 +67,6 @@ async def get_place_id(location: str):
         return await google_service.get_place_id(location)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+if __name__ == '__main__':
+    uvicorn.run(gitapp, host="0.0.0.0", port=8000)
