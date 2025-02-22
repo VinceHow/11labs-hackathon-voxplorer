@@ -1,13 +1,15 @@
 [tool.poetry]
-name = "voxplorer-backedn"
+name = "voxplorer-backend"
 version = "0.1.0"
 description = ""
 authors = ["zhujinglei <zhujinglei2020@outlook.com>"]
 readme = "README.md"
-packages = [{include = "voxplorer_backedn"}]
+packages = [{include = "voxplorer_backend"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+fastapi = "^0.115.8"
+uvicorn = "^0.34.0"
 
 
 [build-system]
