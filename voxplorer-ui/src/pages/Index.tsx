@@ -3,9 +3,51 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Plane, Globe2, MessageCircle, Share2, ChevronDown } from "lucide-react";
 import FeatureCards from "@/components/FeatureCards";
+import TravelPlan from "@/components/TravelPlan";
 
 const Index = () => {
   const [isExpanded, setIsExpanded] = useState(false);
+
+  // Sample travel plan data
+  const travelPlans = [
+    {
+      day: 1,
+      date: "2024-03-20",
+      schedules: [
+        {
+          time: "09:00 AM",
+          activity: "Check-in at Hotel Sunrise",
+          location: "123 Beach Road"
+        },
+        {
+          time: "11:00 AM",
+          activity: "City Tour",
+          location: "Downtown Area"
+        },
+        {
+          time: "02:00 PM",
+          activity: "Lunch at Local Restaurant",
+          location: "Harbor View Restaurant"
+        }
+      ]
+    },
+    {
+      day: 2,
+      date: "2024-03-21",
+      schedules: [
+        {
+          time: "10:00 AM",
+          activity: "Museum Visit",
+          location: "National History Museum"
+        },
+        {
+          time: "03:00 PM",
+          activity: "Beach Activities",
+          location: "Sunset Beach"
+        }
+      ]
+    }
+  ];
 
   const toggleCards = () => {
     setIsExpanded(!isExpanded);
@@ -20,6 +62,8 @@ const Index = () => {
         <p className="text-lg text-center text-gray-600 mb-12 max-w-2xl mx-auto">
           Plan your journey, overcome language barriers, and share your adventures with our all-in-one travel platform.
         </p>
+
+        <TravelPlan plans={travelPlans} />
         
         <div className="flex justify-end mb-4">
           <Button
