@@ -9,6 +9,7 @@ import Navigation from "./components/Navigation";
 import ScheduleDetail from './pages/ScheduleDetail';
 import ItineraryDetail from './pages/ItineraryDetail';
 import ManagePage from './pages/ManagePage';
+import NewBooking from "./pages/NewBooking";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => (
             <Route path="/schedule/:day/:scheduleIndex" element={<ScheduleDetail />} />
             <Route path="/itinerary" element={<ItineraryDetail />} />
             <Route path="/manage" element={<ManagePage />} />
+            <Route path="/new-booking" element={<NewBooking />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
