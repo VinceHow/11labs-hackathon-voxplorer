@@ -1,14 +1,21 @@
 from fastapi import FastAPI, Request, HTTPException, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import Response
+from fastapi.responses import Response, HTMLResponse
 from voxplorer_backend.services.elevenlabs_service import ElevenLabsService
 from voxplorer_backend.services.make_service import MakeService
 from voxplorer_backend.services.google_service import GoogleService
 from voxplorer_backend.models.requests import TextToSpeechRequest, WebhookRequest
-from voxplorer_backend.services.twilio_service import TwilioService
+from voxplorer_backend.services.twilio_service import TwilioService, forward_audio
 from dotenv import load_dotenv
 from voxplorer_backend.agent import route_planner
-from agent import planner
+from voxplorer_backend.agent import planner
+import os
+import asyncio
+import websockets
+from twilio.twiml.voice_response import VoiceResponse, Connect
+from fastapi import WebSocketDisconnect
+import json
+from voxplorer_backend.services.twilio_audio_interface import TwilioAudioInterface
 
 load_dotenv()
 import uvicorn
@@ -111,17 +118,61 @@ async def initiate_outbound_call():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.websocket("/stream")
-async def handle_call_stream(websocket: WebSocket):
+@app.api_route("/twilio/inbound_call", methods=["GET", "POST"])
+async def handle_incoming_call(request: Request):
+    """Handle incoming call and return TwiML response."""
+    response = VoiceResponse()
+    host = request.url.hostname
+    connect = Connect()
+    connect.stream(url=f"wss://{host}/media-stream-eleven")
+    response.append(connect)
+    return HTMLResponse(content=str(response), media_type="application/xml")
+
+@app.websocket("/media-stream-eleven")
+async def handle_media_stream(websocket: WebSocket):
+    await websocket.accept()
+    print("WebSocket connection established")
+    
     try:
-        print("New WebSocket connection request to /stream")
-        print(f"WebSocket protocol: {websocket.headers.get('sec-websocket-protocol', 'none')}")
-        print(f"Connection headers: {websocket.headers}")
-        await websocket.accept()
-        print("WebSocket connection accepted successfully")
-        await twilio_service.handle_stream(websocket)  # Fixed: added websocket parameter
+        agent_id = os.getenv("ELEVENLABS_AGENT_ID")
+        api_key = os.getenv("ELEVENLABS_API_KEY")
+        
+        ws_url = (
+            f"wss://api.elevenlabs.io/v1/convai/conversation"
+            f"?agent_id={agent_id}"
+            f"&input_format=ulaw_8000"
+            f"&output_format=ulaw_8000"
+        )
+        
+        headers = {
+            "Content-Type": "application/json",
+            "xi-api-key": api_key
+        }
+        
+        print("Connecting to ElevenLabs...")
+        async with websockets.connect(
+            ws_url,
+            extra_headers=headers,
+            subprotocols=["convai"]
+        ) as elevenlabs_ws:
+            print("Connected to ElevenLabs successfully")
+            
+            # Send conversation initialization
+            init_data = {
+                "type": "conversation_initiation_client_data"
+            }
+            await elevenlabs_ws.send(json.dumps(init_data))
+            
+            # Start audio forwarding
+            await asyncio.gather(
+                forward_audio(websocket, elevenlabs_ws),
+                forward_audio(elevenlabs_ws, websocket)
+            )
+            
+    except WebSocketDisconnect:
+        print("WebSocket disconnected")
     except Exception as e:
-        print(f"WebSocket error in handler: {str(e)}")
+        print(f"Error in stream handling: {str(e)}")
         print(f"Error type: {type(e)}")
 
 if __name__ == '__main__':
