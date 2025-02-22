@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, HTTPException, WebSocket
+from fastapi import FastAPI, Request, HTTPException, WebSocket, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, HTMLResponse
 from voxplorer_backend.services.elevenlabs_service import ElevenLabsService
@@ -8,6 +8,7 @@ from voxplorer_backend.models.requests import TextToSpeechRequest, WebhookReques
 from voxplorer_backend.services.twilio_service import TwilioService, forward_audio
 from dotenv import load_dotenv
 from voxplorer_backend.agent import route_planner
+from agent.ImageSummaryService import ImageSummaryService
 from voxplorer_backend.agent import planner
 import os
 import asyncio
@@ -15,7 +16,6 @@ import websockets
 from twilio.twiml.voice_response import VoiceResponse, Connect
 from fastapi import WebSocketDisconnect
 import json
-from voxplorer_backend.services.twilio_audio_interface import TwilioAudioInterface
 
 load_dotenv()
 import uvicorn
@@ -111,6 +111,19 @@ def get_booking_summary():
     }
     return booking_data
 
+
+@app.post("/api/image-summary")
+async def image_summary(file: UploadFile = File(...)):
+    try:
+        file_location = f"/tmp/{file.filename}"
+        with open(file_location, "wb+") as file_object:
+            file_object.write(file.file.read())
+
+        summary = ImageSummaryService.get_image_summary(file_location)
+        return {"summary": summary}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.post("/api/calls/outbound")
 async def initiate_outbound_call():
     try:
@@ -132,23 +145,23 @@ async def handle_incoming_call(request: Request):
 async def handle_media_stream(websocket: WebSocket):
     await websocket.accept()
     print("WebSocket connection established")
-    
+
     try:
         agent_id = os.getenv("ELEVENLABS_AGENT_ID")
         api_key = os.getenv("ELEVENLABS_API_KEY")
-        
+
         ws_url = (
             f"wss://api.elevenlabs.io/v1/convai/conversation"
             f"?agent_id={agent_id}"
             f"&input_format=ulaw_8000"
             f"&output_format=ulaw_8000"
         )
-        
+
         headers = {
             "Content-Type": "application/json",
             "xi-api-key": api_key
         }
-        
+
         print("Connecting to ElevenLabs...")
         async with websockets.connect(
             ws_url,
@@ -156,19 +169,19 @@ async def handle_media_stream(websocket: WebSocket):
             subprotocols=["convai"]
         ) as elevenlabs_ws:
             print("Connected to ElevenLabs successfully")
-            
+
             # Send conversation initialization
             init_data = {
                 "type": "conversation_initiation_client_data"
             }
             await elevenlabs_ws.send(json.dumps(init_data))
-            
+
             # Start audio forwarding
             await asyncio.gather(
                 forward_audio(websocket, elevenlabs_ws),
                 forward_audio(elevenlabs_ws, websocket)
             )
-            
+
     except WebSocketDisconnect:
         print("WebSocket disconnected")
     except Exception as e:
