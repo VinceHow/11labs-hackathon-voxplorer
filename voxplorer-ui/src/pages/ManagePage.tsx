@@ -1,16 +1,62 @@
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import BookingSummary from '@/components/BookingSummary';
+
+interface BookingData {
+  reference: string;
+  date: string;
+  destination: string;
+  duration: string;
+  notes: string;
+}
 
 const ManagePage = () => {
   const navigate = useNavigate();
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [bookingData, setBookingData] = useState<BookingData | null>(null);
+
+  useEffect(() => {
+    const fetchBookingData = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:8000/api/booking-summary');
+        if (!response.ok) {
+          throw new Error('Failed to fetch booking data');
+        }
+        const data = await response.json();
+        setBookingData(data);
+      } catch (err) {
+        setError('Failed to load booking information');
+        console.error('Error fetching booking data:', err);
+      }
+    };
+
+    fetchBookingData();
+  }, []);
 
   const handlePlayAudio = async () => {
+    if (!bookingData) return;
+
+    const textToRead = `
+      Booking Summary:
+      Reference number: ${bookingData.reference}.
+      Travel Date: ${bookingData.date}.
+      Destination: ${bookingData.destination}.
+      Duration: ${bookingData.duration}.
+      Important Notes: ${bookingData.notes || 'No additional notes available.'}`
+
     try {
-      // Replace with your actual backend URL
-      const response = await fetch('http://localhost:5000/api/get-audio');
+      const response = await fetch('http://127.0.0.1:8000/api/tts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text: textToRead
+        })
+      });
+
       if (!response.ok) {
         throw new Error('Failed to fetch audio');
       }
@@ -37,28 +83,7 @@ const ManagePage = () => {
 
       <h1 className="text-2xl font-bold mb-6">Manage Booking</h1>
 
-      {/* Booking Summary Card */}
-      <div className="bg-white rounded-lg shadow p-6 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Booking Summary</h2>
-        <div className="grid md:grid-cols-2 gap-4">
-          <div>
-            <p className="text-gray-600">Booking Reference</p>
-            <p className="font-medium">BK12345</p>
-          </div>
-          <div>
-            <p className="text-gray-600">Travel Date</p>
-            <p className="font-medium">March 15, 2024</p>
-          </div>
-          <div>
-            <p className="text-gray-600">Destination</p>
-            <p className="font-medium">Paris, France</p>
-          </div>
-          <div>
-            <p className="text-gray-600">Duration</p>
-            <p className="font-medium">7 Days</p>
-          </div>
-        </div>
-      </div>
+      <BookingSummary />
 
       {/* Audio Player Section */}
       <div className="bg-white rounded-lg shadow p-6 mb-6">
@@ -66,7 +91,8 @@ const ManagePage = () => {
         <div className="space-y-4">
           <button
             onClick={handlePlayAudio}
-            className="w-full px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center justify-center transition-colors duration-200"
+            disabled={!bookingData}
+            className={`w-full px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center justify-center transition-colors duration-200 ${!bookingData ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             <span className="mr-2">
               {isPlaying ? '🔊' : '▶️'}
