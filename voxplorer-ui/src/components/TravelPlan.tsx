@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChevronDown, Clock, Calendar } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface Schedule {
   time: string;
@@ -19,6 +20,7 @@ interface TravelPlanProps {
 
 const TravelPlan = ({ plans }: TravelPlanProps) => {
   const [expandedDays, setExpandedDays] = useState<number[]>([]);
+  const navigate = useNavigate();
 
   const toggleDay = (dayNumber: number) => {
     setExpandedDays(prev => 
@@ -26,6 +28,10 @@ const TravelPlan = ({ plans }: TravelPlanProps) => {
         ? prev.filter(d => d !== dayNumber)
         : [...prev, dayNumber]
     );
+  };
+
+  const handleScheduleClick = (dayNumber: number, scheduleIndex: number) => {
+    navigate(`/schedule/${dayNumber}/${scheduleIndex}`);
   };
 
   return (
@@ -65,7 +71,8 @@ const TravelPlan = ({ plans }: TravelPlanProps) => {
                 {plan.schedules.map((schedule, index) => (
                   <div
                     key={index}
-                    className="flex items-start gap-3 p-2 bg-white rounded-md"
+                    className="flex items-start gap-3 p-2 bg-white rounded-md hover:bg-gray-50 cursor-pointer transition-colors"
+                    onClick={() => handleScheduleClick(plan.day, index)}
                   >
                     <Clock className="w-4 h-4 text-primary mt-1" />
                     <div>

@@ -232,7 +232,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1740230258369</updated>
-      <workItem from="1740230259899" duration="2486000" />
+      <workItem from="1740230259899" duration="2712000" />
     </task>
     <servers />
   </component>
@@ -240,6 +240,6 @@
     <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/voxplorer_backend$main.coverage" NAME="main Coverage Results" MODIFIED="1740236939797" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../voxplorer-backend/voxplorer_backend" />
+    <SUITE FILE_PATH="coverage/voxplorer_backend$main.coverage" NAME="main Coverage Results" MODIFIED="1740237105367" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../voxplorer-backend/voxplorer_backend" />
   </component>
 </project>

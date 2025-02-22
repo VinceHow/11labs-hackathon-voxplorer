@@ -38,6 +38,27 @@ def read_root():
 def read_root():
     return planner.get_all_plan("demo")
 
+@app.get("/api/travel-plans/{day}/schedules/{schedule_index}")
+async def get_schedule_detail(day: int, schedule_index: int):
+    # In a real app, you would fetch this from a database
+    travel_plans = [
+        # ... your existing travel_plans data ...
+    ]
+
+    day_plan = next((plan for plan in travel_plans if plan["day"] == day), None)
+    if not day_plan:
+        raise HTTPException(status_code=404, detail="Day plan not found")
+
+    try:
+        schedule = day_plan["schedules"][schedule_index]
+        return {
+            "day": day_plan["day"],
+            "date": day_plan["date"],
+            "schedule": schedule
+        }
+    except IndexError:
+        raise HTTPException(status_code=404, detail="Schedule not found")
+
 @app.post("/api/tts")
 async def text_to_speech(request: TextToSpeechRequest):
     try:
