@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 import FeatureCards from "@/components/FeatureCards";
 import TravelPlan from "@/components/TravelPlan";
+import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "@/config/api";
 
 interface Schedule {
   time: string;
@@ -21,6 +23,7 @@ const Index = () => {
   const [travelPlans, setTravelPlans] = useState<DayPlan[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTravelPlans = async () => {
@@ -48,6 +51,10 @@ const Index = () => {
 
   const toggleCards = () => {
     setIsExpanded(!isExpanded);
+  };
+
+  const handleNewBooking = () => {
+    navigate('/new-booking');
   };
 
   return (
@@ -88,6 +95,15 @@ const Index = () => {
           </Button>
         </div>
         <FeatureCards isExpanded={isExpanded} />
+        
+        <div className="flex justify-center gap-4 mt-6">
+          <Button variant="default" onClick={handleNewBooking}>
+            New
+          </Button>
+          <Button variant="outline">
+            Modify
+          </Button>
+        </div>
       </div>
     </div>
   );

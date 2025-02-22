@@ -7,11 +7,14 @@ from voxplorer_backend.services.google_service import GoogleService
 from voxplorer_backend.models.requests import TextToSpeechRequest, WebhookRequest
 from voxplorer_backend.services.twilio_service import TwilioService
 from dotenv import load_dotenv
+from voxplorer_backend.agent import route_planner
+from agent import planner
 
 load_dotenv()
 import uvicorn
 app = FastAPI()
 
+app.include_router(route_planner.router)
 origins = [
     "http://localhost:8080",
     "http://localhost:3000",
@@ -89,6 +92,17 @@ async def get_place_id(location: str):
         return await google_service.get_place_id(location)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.get('/api/booking-summary')
+def get_booking_summary():
+    booking_data = {
+        "reference": "BK12345",
+        "date": "March 15, 2024",
+        "destination": "Paris, France",
+        "duration": "7 Days",
+        "notes": "Special dietary requirements: Vegetarian\nEarly check-in requested\nAirport transfer included"
+    }
+    return booking_data
 
 @app.post("/api/calls/outbound")
 async def initiate_outbound_call():
