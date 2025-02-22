@@ -16,6 +16,8 @@ import websockets
 from twilio.twiml.voice_response import VoiceResponse, Connect
 from fastapi import WebSocketDisconnect
 import json
+from pydantic import BaseModel
+from datetime import datetime
 
 load_dotenv()
 import uvicorn
@@ -253,6 +255,24 @@ async def handle_media_stream(websocket: WebSocket):
     except Exception as e:
         print(f"Error in stream handling: {str(e)}")
         print(f"Error type: {type(e)}")
+
+class BookingRequest(BaseModel):
+    time: str
+    location: str
+    additional_details: str
+
+@app.post("/api/bookings")
+async def create_booking(request: BookingRequest):
+    try:
+        # Here you would typically save to a database
+        booking_details = {
+            "time": request.time,
+            "location": request.location,
+            "additional_details": request.addtional_details,
+        }
+        return booking_details
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == '__main__':
     uvicorn.run(app, host="0.0.0.0", port=8000)
