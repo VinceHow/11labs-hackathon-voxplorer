@@ -1,19 +1,17 @@
-from fastapi import FastAPI, Request, HTTPException
-from agent import planner, route_planner
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, Request, HTTPException, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from voxplorer_backend.services.elevenlabs_service import ElevenLabsService
 from voxplorer_backend.services.make_service import MakeService
 from voxplorer_backend.services.google_service import GoogleService
 from voxplorer_backend.models.requests import TextToSpeechRequest, WebhookRequest
+from voxplorer_backend.services.twilio_service import TwilioService
 from dotenv import load_dotenv
 
 load_dotenv()
 import uvicorn
 app = FastAPI()
 
-app.include_router(route_planner.router)
 origins = [
     "http://localhost:8080",
     "http://localhost:3000",
@@ -32,6 +30,7 @@ app.add_middleware(
 elevenlabs_service = ElevenLabsService()
 make_service = MakeService()
 google_service = GoogleService()
+twilio_service = TwilioService()
 
 @app.get("/")
 def read_root():
@@ -90,6 +89,18 @@ async def get_place_id(location: str):
         return await google_service.get_place_id(location)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/calls/outbound")
+async def initiate_outbound_call():
+    try:
+        return await twilio_service.initiate_call()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.websocket("/stream")
+async def handle_call_stream(websocket: WebSocket):
+    await websocket.accept()
+    await twilio_service.handle_stream(websocket)
 
 if __name__ == '__main__':
     uvicorn.run(app, host="0.0.0.0", port=8000)
