@@ -145,10 +145,13 @@ async def handle_incoming_call(request: Request):
 async def handle_media_stream(websocket: WebSocket):
     await websocket.accept()
     print("WebSocket connection established")
+    connection_id = id(websocket)
+    print(f"Connection ID: {connection_id}")
 
     try:
         agent_id = os.getenv("ELEVENLABS_AGENT_ID")
         api_key = os.getenv("ELEVENLABS_API_KEY")
+        print(f"Using agent ID: {agent_id[:8]}... (truncated)")
 
         ws_url = (
             f"wss://api.elevenlabs.io/v1/convai/conversation"
@@ -156,6 +159,7 @@ async def handle_media_stream(websocket: WebSocket):
             f"&input_format=ulaw_8000"
             f"&output_format=ulaw_8000"
         )
+        print(f"Connecting to ElevenLabs at: {ws_url}")
 
         headers = {
             "Content-Type": "application/json",
@@ -168,22 +172,84 @@ async def handle_media_stream(websocket: WebSocket):
             extra_headers=headers,
             subprotocols=["convai"]
         ) as elevenlabs_ws:
-            print("Connected to ElevenLabs successfully")
+            print(f"Connected to ElevenLabs successfully (Connection ID: {connection_id})")
 
             # Send conversation initialization
             init_data = {
                 "type": "conversation_initiation_client_data"
             }
+            print("Sending initialization data to ElevenLabs")
             await elevenlabs_ws.send(json.dumps(init_data))
+            print("Initialization data sent")
 
-            # Start audio forwarding
-            await asyncio.gather(
-                forward_audio(websocket, elevenlabs_ws),
-                forward_audio(elevenlabs_ws, websocket)
-            )
+            # Track stream SID
+            stream_sid = None
+
+            async def forward_twilio_to_elevenlabs():
+                nonlocal stream_sid
+                while True:
+                    try:
+                        message = await websocket.receive_text()
+                        data = json.loads(message)
+                        print(f"Received from Twilio: {message[:100]}...")
+
+                        if data["event"] == "start":
+                            stream_sid = data["start"]["streamSid"]
+                            print(f"Stream started with SID: {stream_sid}")
+                        elif data["event"] == "media" and "media" in data:
+                            # Forward audio to ElevenLabs
+                            await elevenlabs_ws.send(json.dumps({
+                                "user_audio_chunk": data["media"]["payload"]
+                            }))
+                    except Exception as e:
+                        print(f"Error in Twilio->ElevenLabs forwarding: {e}")
+                        break
+
+            async def forward_elevenlabs_to_twilio():
+                while True:
+                    try:
+                        message = await elevenlabs_ws.recv()
+                        data = json.loads(message)
+                        print(f"Received from ElevenLabs: {message[:100]}...")
+
+                        if data["type"] == "audio":
+                            if not stream_sid:
+                                print("Warning: No stream_sid available")
+                                continue
+
+                            audio_chunk = None
+                            if "audio" in data and "chunk" in data["audio"]:
+                                audio_chunk = data["audio"]["chunk"]
+                            elif "audio_event" in data and "audio_base_64" in data["audio_event"]:
+                                audio_chunk = data["audio_event"]["audio_base_64"]
+
+                            if audio_chunk:
+                                # Send properly formatted message to Twilio
+                                twilio_message = {
+                                    "event": "media",
+                                    "streamSid": stream_sid,
+                                    "media": {
+                                        "payload": audio_chunk
+                                    }
+                                }
+                                print(f"Sending audio to Twilio, chunk size: {len(audio_chunk)}")
+                                await websocket.send_text(json.dumps(twilio_message))
+                    except Exception as e:
+                        print(f"Error in ElevenLabs->Twilio forwarding: {e}")
+                        break
+
+            print(f"Starting audio forwarding for connection {connection_id}")
+            try:
+                await asyncio.gather(
+                    forward_twilio_to_elevenlabs(),
+                    forward_elevenlabs_to_twilio()
+                )
+            except Exception as e:
+                print(f"Error in audio forwarding tasks: {str(e)}")
+                print(f"Error type: {type(e)}")
 
     except WebSocketDisconnect:
-        print("WebSocket disconnected")
+        print(f"WebSocket disconnected (Connection ID: {connection_id})")
     except Exception as e:
         print(f"Error in stream handling: {str(e)}")
         print(f"Error type: {type(e)}")
