@@ -53,23 +53,22 @@ class TwilioService:
             # Add query parameters for authentication and audio format
             ws_url = (
                 f"wss://api.elevenlabs.io/v1/agent/{self.agent_id}/call"
-                f"?input_format=mulaw"
+                f"?xi-api-key={self.api_key}"  # Move API key back to query param
+                f"&input_format=mulaw"
                 f"&output_format=mulaw"
                 f"&sample_rate=8000"
             )
             
-            # Separate headers for authentication
+            # Simplified headers
             headers = {
-                "xi-api-key": self.api_key,
-                "Authorization": f"Bearer {self.api_key}",
                 "Content-Type": "application/json"
             }
             
-            print("Connecting with headers:", headers)
+            print(f"Connecting to URL: {ws_url}")
             async with websockets.connect(
                 ws_url,
                 extra_headers=headers,
-                subprotocols=["websocket"]
+                subprotocols=["audio-websocket"]  # Add specific subprotocol
             ) as elevenlabs_ws:
                 print("Connected to ElevenLabs successfully")
                 try:
