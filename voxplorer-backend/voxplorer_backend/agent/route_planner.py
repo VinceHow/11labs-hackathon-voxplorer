@@ -2,8 +2,11 @@ from fastapi import APIRouter, HTTPException
 import os
 from googlemaps import Client, directions
 from typing import List, Dict, Any
+from dotenv import load_dotenv
 
+load_dotenv()
 router = APIRouter()
+
 gmaps = Client(key=os.environ.get('GOOGLE_MAPS_API_KEY'))
 
 @router.get("/api/route/{day}/{schedule_index}")
