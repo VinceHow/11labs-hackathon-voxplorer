@@ -1,53 +1,51 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Plane, Globe2, MessageCircle, Share2, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import FeatureCards from "@/components/FeatureCards";
 import TravelPlan from "@/components/TravelPlan";
 
+interface Schedule {
+  time: string;
+  activity: string;
+  location: string;
+}
+
+interface DayPlan {
+  day: number;
+  date: string;
+  schedules: Schedule[];
+}
+
 const Index = () => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [travelPlans, setTravelPlans] = useState<DayPlan[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Sample travel plan data
-  const travelPlans = [
-    {
-      day: 1,
-      date: "2024-03-20",
-      schedules: [
-        {
-          time: "09:00 AM",
-          activity: "Check-in at Hotel Sunrise",
-          location: "123 Beach Road"
-        },
-        {
-          time: "11:00 AM",
-          activity: "City Tour",
-          location: "Downtown Area"
-        },
-        {
-          time: "02:00 PM",
-          activity: "Lunch at Local Restaurant",
-          location: "Harbor View Restaurant"
+  useEffect(() => {
+    const fetchTravelPlans = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch('http://127.0.0.1:8000/api/travel-plans');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
-      ]
-    },
-    {
-      day: 2,
-      date: "2024-03-21",
-      schedules: [
-        {
-          time: "10:00 AM",
-          activity: "Museum Visit",
-          location: "National History Museum"
-        },
-        {
-          time: "03:00 PM",
-          activity: "Beach Activities",
-          location: "Sunset Beach"
-        }
-      ]
-    }
-  ];
+        
+        const data = await response.json();
+        setTravelPlans(data);
+        setError(null);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to fetch travel plans');
+        console.error('Error fetching travel plans:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTravelPlans();
+  }, []);
 
   const toggleCards = () => {
     setIsExpanded(!isExpanded);
@@ -63,7 +61,18 @@ const Index = () => {
           Plan your journey, overcome language barriers, and share your adventures with our all-in-one travel platform.
         </p>
 
-        <TravelPlan plans={travelPlans} />
+        {isLoading ? (
+          <div className="text-center p-4">
+            <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p>Loading travel plans...</p>
+          </div>
+        ) : error ? (
+          <div className="text-red-500 p-4 text-center bg-red-50 rounded-lg">
+            {error}
+          </div>
+        ) : (
+          <TravelPlan plans={travelPlans} />
+        )}
         
         <div className="flex justify-end mb-4">
           <Button
