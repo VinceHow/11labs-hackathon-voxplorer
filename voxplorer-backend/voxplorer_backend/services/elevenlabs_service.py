@@ -30,4 +30,4 @@ class ElevenLabsService:
             if response.status_code != 200:
                 raise Exception(f"ElevenLabs API error: {response.text}")
                 
-            return response.content 
+            return response.content

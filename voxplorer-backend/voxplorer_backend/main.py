@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import Response
 from .services.elevenlabs_service import ElevenLabsService
 from .services.make_service import MakeService
 from .services.google_service import GoogleService
@@ -32,7 +33,7 @@ def read_root():
 async def text_to_speech(request: TextToSpeechRequest):
     try:
         audio = await elevenlabs_service.convert_text_to_speech(request.text, request.voice_id)
-        return {"audio": audio}
+        return Response(content=audio, media_type="audio/mpeg")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
