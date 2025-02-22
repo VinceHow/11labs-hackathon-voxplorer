@@ -34,7 +34,9 @@ class TwilioService:
 
     async def handle_stream(self, websocket):
         try:
+            print("WebSocket connection initiated")
             # Initialize ElevenLabs websocket connection
+            print("Attempting to connect to ElevenLabs...")
             async with websockets.connect(
                 f"wss://api.elevenlabs.io/v1/agent/{self.agent_id}/call",
                 extra_headers={
@@ -42,13 +44,19 @@ class TwilioService:
                     "Content-Type": "application/json"
                 }
             ) as elevenlabs_ws:
+                print("Connected to ElevenLabs successfully")
                 # Handle bidirectional audio streaming
-                await asyncio.gather(
-                    self._forward_audio(websocket, elevenlabs_ws),
-                    self._forward_audio(elevenlabs_ws, websocket)
-                )
+                try:
+                    await asyncio.gather(
+                        self._forward_audio(websocket, elevenlabs_ws),
+                        self._forward_audio(elevenlabs_ws, websocket)
+                    )
+                except Exception as e:
+                    print(f"Error in audio forwarding: {str(e)}")
         except Exception as e:
             print(f"Error in stream handling: {str(e)}")
+            print(f"Agent ID: {self.agent_id}")
+            print(f"API Key present: {bool(self.api_key)}")
 
     async def _forward_audio(self, source, destination):
         try:
