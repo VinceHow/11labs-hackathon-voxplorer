@@ -1,9 +1,15 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Plane, Globe2, MessageCircle, Share2 } from "lucide-react";
+import { Plane, Globe2, MessageCircle, Share2, ChevronDown } from "lucide-react";
+import FeatureCards from "@/components/FeatureCards";
 
 const Index = () => {
-  const navigate = useNavigate();
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleCards = () => {
+    setIsExpanded(!isExpanded);
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-b from-white to-gray-50">
@@ -15,63 +21,24 @@ const Index = () => {
           Plan your journey, overcome language barriers, and share your adventures with our all-in-one travel platform.
         </p>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <div className="glass-card p-6 rounded-lg hover-lift">
-            <Plane className="w-8 h-8 text-primary mb-4" />
-            <h2 className="text-xl font-semibold mb-2">Itanary</h2>
-            <p className="text-gray-600 mb-4">Create detailed itineraries and organize your perfect journey.</p>
-            <Button 
-              variant="outline" 
-              className="w-full"
-              onClick={() => navigate("/itanary")}
-            >
-              Start Planning
-            </Button>
-          </div>
-          
-          <div className="glass-card p-6 rounded-lg hover-lift">
-            <Globe2 className="w-8 h-8 text-primary mb-4" />
-            <h2 className="text-xl font-semibold mb-2">Manage</h2>
-            <p className="text-gray-600 mb-4">Manage your travel plan seamlessly.</p>
-            <Button 
-              variant="outline" 
-              className="w-full"
-              onClick={() => navigate("/manage")}
-            >
-              Translate Now
-            </Button>
-          </div>
-          
-          <div className="glass-card p-6 rounded-lg hover-lift">
-            <MessageCircle className="w-8 h-8 text-primary mb-4" />
-            <h2 className="text-xl font-semibold mb-2">Narrate</h2>
-            <p className="text-gray-600 mb-4">Immerse yourself in the story of your journey.</p>
-            <Button 
-              variant="outline" 
-              className="w-full"
-              onClick={() => navigate("/narrate")}
-            >
-              View Posts
-            </Button>
-          </div>
-
-          <div className="glass-card p-6 rounded-lg hover-lift">
-            <Share2 className="w-8 h-8 text-primary mb-4" />
-            <h2 className="text-xl font-semibold mb-2">Share</h2>
-            <p className="text-gray-600 mb-4">Share your travel stories with your friends and family, during the trip or after!</p>
-            <Button 
-              variant="outline" 
-              className="w-full"
-              onClick={() => navigate("/share")}
-            >
-              View Posts
-            </Button>
-          </div>
+        <div className="flex justify-end mb-4">
+          <Button
+            variant="ghost"
+            onClick={toggleCards}
+            className="flex items-center gap-2"
+          >
+            {isExpanded ? 'Hide Features' : 'Show Features'}
+            <ChevronDown 
+              className={`w-5 h-5 transition-transform duration-300 ${
+                isExpanded ? 'rotate-180' : ''
+              }`}
+            />
+          </Button>
         </div>
+        <FeatureCards isExpanded={isExpanded} />
       </div>
     </div>
   );
 };
-
 
 export default Index;
