@@ -100,12 +100,15 @@ async def initiate_outbound_call():
 @app.websocket("/stream")
 async def handle_call_stream(websocket: WebSocket):
     try:
-        print("New WebSocket connection request")
+        print("New WebSocket connection request to /stream")
+        print(f"WebSocket protocol: {websocket.headers.get('sec-websocket-protocol', 'none')}")
+        print(f"Connection headers: {websocket.headers}")
         await websocket.accept()
-        print("WebSocket connection accepted")
-        await twilio_service.handle_stream(websocket)
+        print("WebSocket connection accepted successfully")
+        await twilio_service.handle_stream(websocket)  # Fixed: added websocket parameter
     except Exception as e:
-        print(f"WebSocket error: {str(e)}")
+        print(f"WebSocket error in handler: {str(e)}")
+        print(f"Error type: {type(e)}")
 
 if __name__ == '__main__':
     uvicorn.run(app, host="0.0.0.0", port=8000)
