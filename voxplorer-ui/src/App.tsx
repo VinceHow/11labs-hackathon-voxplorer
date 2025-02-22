@@ -9,7 +9,8 @@ import Navigation from "./components/Navigation";
 import ScheduleDetail from './pages/ScheduleDetail';
 import ItineraryDetail from './pages/ItineraryDetail';
 import ManagePage from './pages/ManagePage';
-import NewBooking from "./pages/NewBooking";
+import NewBooking from "@/pages/NewBooking";
+import Narrate from "@/pages/Narrate";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/itinerary" element={<ItineraryDetail />} />
             <Route path="/manage" element={<ManagePage />} />
             <Route path="/new-booking" element={<NewBooking />} />
+            <Route path="/narrate" element={<Narrate />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
