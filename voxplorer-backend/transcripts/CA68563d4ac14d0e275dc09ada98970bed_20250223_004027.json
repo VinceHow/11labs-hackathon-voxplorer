@@ -1,0 +1,18 @@
+{
+  "call_sid": "CA68563d4ac14d0e275dc09ada98970bed",
+  "start_time": "2024-02-23T11:13:45.123456",
+  "turns": [
+    {
+      "turn_number": 1,
+      "actor": "agent",
+      "text_original_language": "Hi, I'm Alexis from ElevenLabs support. How can I help you today?",
+      "timestamp": "2024-02-23T11:13:46.123456"
+    },
+    {
+      "turn_number": 2,
+      "actor": "restaurant",
+      "text_original_language": "I'd like to make a reservation",
+      "timestamp": "2024-02-23T11:13:48.123456"
+    }
+  ]
+}
