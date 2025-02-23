@@ -9,7 +9,8 @@ interface Message {
   type: 'user' | 'assistant';
   content: string;
   contentType: 'text' | 'image' | 'audio';
-  timestamp: Date;
+  timestamp: string;
+  status?: string;
 }
 
 const Narrate = () => {
@@ -39,12 +40,14 @@ const Narrate = () => {
   const handleSendMessage = async () => {
     if (!inputText.trim() && !selectedImage) return;
 
+    const currentTime = new Date().toISOString();
     const newMessage: Message = {
       id: Date.now().toString(),
       type: 'user',
-      content: inputText,
-      contentType: 'text',
-      timestamp: new Date(),
+      content: selectedImage ? 'Sent an image' : inputText,
+      contentType: selectedImage ? 'image' : 'text',
+      timestamp: currentTime,
+      status: 'sent'
     };
 
     setMessages(prev => [...prev, newMessage]);
@@ -53,28 +56,47 @@ const Narrate = () => {
     try {
       setIsLoading(true);
       const formData = new FormData();
-      formData.append('message', inputText);
+
+      let endpoint = `http://localhost:8000/api/chat`;
+      
       if (selectedImage) {
-        formData.append('image', selectedImage);
+        endpoint = `localhost:8000/api/image-summary`;
+        formData.append('file', selectedImage, selectedImage.name);
+      } else {
+        formData.append('message', inputText);
       }
 
-      const response = await fetch(`${API_BASE_URL}/api/chat`, {
+      const response = await fetch(endpoint, {
         method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+        },
         body: formData,
       });
 
-      if (!response.ok) throw new Error('Failed to send message');
+      if (!response.ok) {
+        throw new Error('Failed to send message');
+      }
 
       const data = await response.json();
       setMessages(prev => [...prev, {
         id: Date.now().toString(),
         type: 'assistant',
-        content: data.response,
+        content: data.message || 'No response from server',
         contentType: 'text',
-        timestamp: new Date(),
+        timestamp: data.timestamp || new Date().toISOString(),
+        status: data.status || 'received'
       }]);
     } catch (error) {
       console.error('Error sending message:', error);
+      setMessages(prev => [...prev, {
+        id: Date.now().toString(),
+        type: 'assistant',
+        content: 'Sorry, there was an error processing your request.',
+        contentType: 'text',
+        timestamp: new Date().toISOString(),
+        status: 'error'
+      }]);
     } finally {
       setIsLoading(false);
       setSelectedImage(null);
@@ -99,7 +121,7 @@ const Narrate = () => {
 
         try {
           setIsLoading(true);
-          const response = await fetch(`${API_BASE_URL}/api/transcribe`, {
+          const response = await fetch(`http://localhost:8000/api/transcribe`, {
             method: 'POST',
             body: formData,
           });
@@ -169,11 +191,20 @@ const Narrate = () => {
                       : 'bg-gray-50 text-gray-800 shadow-gray-100'
                   } shadow-md transition-all duration-200 hover:shadow-lg`}
                 >
-                  {message.content}
-                  <div className={`text-xs mt-1 ${
-                    message.type === 'user' ? 'text-blue-100' : 'text-gray-400'
-                  }`}>
-                    {new Date(message.timestamp).toLocaleTimeString()}
+                  <div className="mb-1">{message.content}</div>
+                  <div
+                    className={`flex justify-between items-center text-xs ${
+                      message.type === 'user' ? 'text-blue-100' : 'text-gray-400'
+                    }`}
+                  >
+                    <span>
+                      {new Date(message.timestamp).toLocaleTimeString()}
+                    </span>
+                    {message.status && (
+                      <span className="ml-2">
+                        {message.status}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>

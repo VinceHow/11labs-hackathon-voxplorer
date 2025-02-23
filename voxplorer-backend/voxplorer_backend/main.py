@@ -18,9 +18,11 @@ from fastapi import WebSocketDisconnect
 import json
 from pydantic import BaseModel
 from datetime import datetime
+from fastapi import Form
 
 load_dotenv()
 import uvicorn
+
 app = FastAPI()
 
 app.include_router(route_planner.router)
@@ -44,13 +46,16 @@ make_service = MakeService()
 google_service = GoogleService()
 twilio_service = TwilioService()
 
+
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
 
+
 @app.get("/api/travel-plans")
 def read_root():
     return planner.get_all_plan("demo")
+
 
 @app.get("/api/travel-plans/{day}/schedules/{schedule_index}")
 async def get_schedule_detail(day: int, schedule_index: int):
@@ -73,6 +78,7 @@ async def get_schedule_detail(day: int, schedule_index: int):
     except IndexError:
         raise HTTPException(status_code=404, detail="Schedule not found")
 
+
 @app.post("/api/tts")
 async def text_to_speech(request: TextToSpeechRequest):
     try:
@@ -81,12 +87,14 @@ async def text_to_speech(request: TextToSpeechRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @app.post("/api/make/webhook")
 async def make_webhook(request: WebhookRequest):
     try:
         return await make_service.handle_webhook(request)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.get("/api/places/search")
 async def search_places(query: str, location: str = None):
@@ -95,12 +103,14 @@ async def search_places(query: str, location: str = None):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @app.get("/api/places/id")
 async def get_place_id(location: str):
     try:
         return await google_service.get_place_id(location)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.get('/api/booking-summary')
 def get_booking_summary():
@@ -126,12 +136,29 @@ async def image_summary(file: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
+@app.post("/api/chat")
+async def chat_message(message: str = Form(...)):
+    try:
+        # Process the chat message here
+        res = ImageSummaryService.generate_text_reply(message)
+        response = {
+            "timestamp": datetime.now().isoformat(),
+            "message": res,
+            "status": "received"
+        }
+        return response
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @app.post("/api/calls/outbound")
 async def initiate_outbound_call():
     try:
         return await twilio_service.initiate_call()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.api_route("/twilio/inbound_call", methods=["GET", "POST"])
 async def handle_incoming_call(request: Request):
@@ -142,6 +169,7 @@ async def handle_incoming_call(request: Request):
     connect.stream(url=f"wss://{host}/media-stream-eleven")
     response.append(connect)
     return HTMLResponse(content=str(response), media_type="application/xml")
+
 
 @app.websocket("/media-stream-eleven")
 async def handle_media_stream(websocket: WebSocket):
@@ -170,9 +198,9 @@ async def handle_media_stream(websocket: WebSocket):
 
         print("Connecting to ElevenLabs...")
         async with websockets.connect(
-            ws_url,
-            extra_headers=headers,
-            subprotocols=["convai"]
+                ws_url,
+                extra_headers=headers,
+                subprotocols=["convai"]
         ) as elevenlabs_ws:
             print(f"Connected to ElevenLabs successfully (Connection ID: {connection_id})")
 
@@ -256,10 +284,12 @@ async def handle_media_stream(websocket: WebSocket):
         print(f"Error in stream handling: {str(e)}")
         print(f"Error type: {type(e)}")
 
+
 class BookingRequest(BaseModel):
     time: str
     location: str
     additional_details: str
+
 
 @app.post("/api/bookings")
 async def create_booking(request: BookingRequest):
@@ -273,6 +303,7 @@ async def create_booking(request: BookingRequest):
         return booking_details
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 if __name__ == '__main__':
     uvicorn.run(app, host="0.0.0.0", port=8000)

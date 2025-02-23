@@ -32,6 +32,15 @@ class ImageSummaryService:
         return response.choices[0].text.strip()
 
     @staticmethod
+    def generate_text_reply(message):
+        prompt = f"Please respond to this message in a helpful and natural way: {message}"
+        response = client.completions.create(
+            model="gpt-3.5-turbo-instruct",
+            prompt=prompt,
+            max_tokens=150)
+        return response.choices[0].text.strip()
+
+    @staticmethod
     def get_image_summary(image_path):
         labels = ImageSummaryService.get_image_labels(image_path)
         summary = ImageSummaryService.generate_summary(labels)
