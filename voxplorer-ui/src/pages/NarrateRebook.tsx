@@ -17,6 +17,11 @@ const RestaurantTab = ({ name, rating, description }: { name: string, rating: st
   const [isCallVisible, setIsCallVisible] = useState(false);
   const navigate = useNavigate();
 
+  const handleBookClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsCallVisible(!isCallVisible);
+  };
+
   return (
     <div className="mb-2">
       <div className="bg-gray-600 rounded-xl p-2.5">
@@ -31,7 +36,7 @@ const RestaurantTab = ({ name, rating, description }: { name: string, rating: st
               Open
             </button>
             <button 
-              onClick={() => setIsCallVisible(true)}
+              onClick={handleBookClick}
               className="bg-[#2F4F3A] text-white px-4 py-1 rounded-full text-xs font-semibold flex-1"
             >
               Book
@@ -50,7 +55,7 @@ const RestaurantTab = ({ name, rating, description }: { name: string, rating: st
           </div>
           <button 
             className="bg-white/20 p-2 rounded-full"
-            onClick={() => navigate('/call')}  // Add appropriate navigation route
+            onClick={() => navigate('/call')}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M7 17l9.2-9.2M17 17V8H8" />
@@ -68,9 +73,9 @@ const NarrateRebook = () => {
     {
       id: '1',
       content: "Hey Annie, unfortunately Sushi Jiro had to cancel your booking tomorrow as the chef is off sick. Would you like me to find you a different booking?",
+      type: 'assistant',
       contentType: 'text',
-      timestamp: new Date().toISOString(),
-      type: 'assistant'
+      timestamp: new Date().toISOString()  // Fixed timestamp
     }
   ]);
   const [inputText, setInputText] = useState('');
@@ -100,9 +105,9 @@ const NarrateRebook = () => {
     const newMessage: Message = {
       id: Date.now().toString(),
       content: inputText,
-      contentType: 'text',
       type: 'user',
-      timestamp: new Date().toLocaleTimeString(),
+      contentType: 'text',
+      timestamp: new Date().toISOString(),
       imageUrl: selectedImage ? URL.createObjectURL(selectedImage) : undefined
     };
 
@@ -115,25 +120,21 @@ const NarrateRebook = () => {
     setTimeout(() => {
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
-        contentType: 'text',
         content: "Great! I've found three excellent sushi restaurants available for tomorrow evening. Each of these is highly rated and can accommodate your party. Would you like to see more details about any of these options?",
         type: 'assistant',
-        timestamp: new Date().toLocaleTimeString()
+        contentType: 'text',
+        timestamp: new Date().toISOString()
       };
       
-      // Add the initial response
-      setMessages(prev => [...prev, assistantMessage]);
-      
-      // Add the restaurant options message
       const restaurantOptionsMessage: Message = {
         id: (Date.now() + 2).toString(),
-        contentType: 'text',
-        content: "restaurant-options",  // Special trigger for showing restaurant tabs
+        content: "restaurant-options",
         type: 'assistant',
-        timestamp: new Date().toLocaleTimeString()
+        contentType: 'text',
+        timestamp: new Date().toISOString()
       };
       
-      setMessages(prev => [...prev, restaurantOptionsMessage]);
+      setMessages(prev => [...prev, assistantMessage, restaurantOptionsMessage]);
       setIsLoading(false);
     }, 1000);
   };

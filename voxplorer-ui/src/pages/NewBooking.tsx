@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { API_BASE_URL } from "@/config/api";
-import { Clock, MapPin, FileText, Loader2, Phone } from "lucide-react";
+import { Clock, MapPin, FileText, Loader2, Phone, ChevronLeft } from "lucide-react";
 
 interface Booking {
   time: string;  // Simple string type now
@@ -79,79 +79,76 @@ const NewBooking = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start p-6 bg-gradient-to-b from-white to-gray-50">
-      <div className="w-full max-w-4xl">
-        <div className="flex items-center mb-8">
-          <Button variant="ghost" onClick={handleBack}>
-            Back
-          </Button>
-          <h1 className="text-3xl font-bold text-center flex-1">New Booking</h1>
-          <Button
-            variant="outline"
-            className="flex items-center gap-2"
-            onClick={initiateCall}
-            disabled={isCallLoading}
-          >
-            <Phone className="h-5 w-5" />
-            {isCallLoading ? 'Calling...' : 'Start Call'}
-          </Button>
-        </div>
+    <div className="min-h-screen bg-[#2F4F3A] p-6 flex flex-col">
+      <div className="flex justify-between items-center mb-4">
+        <button onClick={handleBack} className="text-[#E8DFD0]">
+          <ChevronLeft className="h-6 w-6" />
+        </button>
+        <h1 className="text-2xl font-semibold text-[#E8DFD0]">New Booking</h1>
+        <button 
+          onClick={initiateCall}
+          disabled={isCallLoading}
+          className="text-[#E8DFD0]"
+        >
+          <Phone className="h-5 w-5" />
+        </button>
+      </div>
 
+      <div className="flex-1 bg-[#E8DFD0] rounded-3xl p-4 overflow-y-auto">
         {isLoading ? (
           <div className="flex items-center justify-center p-8">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+            <Loader2 className="h-8 w-8 animate-spin text-[#2F4F3A]" />
           </div>
         ) : error ? (
           <div className="bg-red-50 text-red-500 p-4 rounded-lg text-center">
             {error}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-3">
             {Object.entries(bookings).map(([id, booking]) => (
               <div
                 key={id}
-                className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden"
+                className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200"
               >
-                <div className="p-6 space-y-4">
-                  <div className="flex items-start gap-3">
-                    <Clock className="h-5 w-5 text-blue-500 mt-1 flex-shrink-0" />
+                <div className="p-3 space-y-2">
+                  <div className="flex items-start gap-2">
+                    <Clock className="h-4 w-4 text-[#2F4F3A] mt-1 flex-shrink-0" />
                     <div>
-                      <div className="text-sm text-gray-500 font-medium">Time</div>
-                      <div className="text-gray-700">
-                        {booking.time}  {/* Direct string display */}
+                      <div className="text-xs text-gray-500 font-medium">Time</div>
+                      <div className="text-sm text-gray-700">
+                        {booking.time}
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3">
-                    <MapPin className="h-5 w-5 text-blue-500 mt-1 flex-shrink-0" />
+                  <div className="flex items-start gap-2">
+                    <MapPin className="h-4 w-4 text-[#2F4F3A] mt-1 flex-shrink-0" />
                     <div>
-                      <div className="text-sm text-gray-500 font-medium">Location</div>
-                      <div className="text-gray-700">
+                      <div className="text-xs text-gray-500 font-medium">Location</div>
+                      <div className="text-sm text-gray-700">
                         {booking.location}
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3">
-                    <FileText className="h-5 w-5 text-blue-500 mt-1 flex-shrink-0" />
+                  <div className="flex items-start gap-2">
+                    <FileText className="h-4 w-4 text-[#2F4F3A] mt-1 flex-shrink-0" />
                     <div>
-                      <div className="text-sm text-gray-500 font-medium">Additional Details</div>
-                      <div className="text-gray-700">
+                      <div className="text-xs text-gray-500 font-medium">Additional Details</div>
+                      <div className="text-sm text-gray-700">
                         {booking.additional_details}
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
-                  <Button 
-                    className="w-full"
-                    variant="outline"
+                <div className="px-3 py-2 bg-gray-50 border-t border-gray-100 rounded-b-xl">
+                  <button 
+                    className="w-full bg-[#2F4F3A] text-white px-4 py-1.5 rounded-full text-sm font-medium hover:bg-[#264231] transition-colors"
                     onClick={() => {/* Add booking selection handler */}}
                   >
                     Select Booking
-                  </Button>
+                  </button>
                 </div>
               </div>
             ))}
