@@ -1,6 +1,8 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { GoogleMap, LoadScript, DirectionsService, DirectionsRenderer } from '@react-google-maps/api';
+import { ChevronLeft, MessageSquare } from "lucide-react";
+import { GoogleMap, LoadScript, DirectionsRenderer } from '@react-google-maps/api';
+import InputBar from "@/components/InputBar";
 
 const ScheduleDetail = () => {
   const { day, scheduleIndex } = useParams();
@@ -11,7 +13,8 @@ const ScheduleDetail = () => {
 
   const mapContainerStyle = {
     width: '100%',
-    height: '400px'
+    height: '200px',
+    borderRadius: '8px'
   };
 
   useEffect(() => {
@@ -35,96 +38,106 @@ const ScheduleDetail = () => {
   }, [day, scheduleIndex]);
 
   return (
-    <div className="container mx-auto px-4">
-      <div className="flex justify-center">
-        <button 
-          onClick={() => navigate('/')}
-          className="mb-6 mt-4 px-6 py-3 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 flex items-center transition-colors duration-200"
-        >
-          <span className="mr-2 text-lg">←</span> Back to Home
+    <div className="min-h-screen bg-[#2F4F3A] p-4 flex flex-col">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-4">
+        <button onClick={() => navigate(-1)} className="text-[#E8DFD0]">
+          <ChevronLeft className="h-8 w-8" />
+        </button>
+        <h1 className="text-2xl font-semibold text-[#E8DFD0]">Kyoto 2025</h1>
+        <button className="text-[#E8DFD0]">
+          <MessageSquare className="h-6 w-6" />
         </button>
       </div>
 
-      <h1 className="text-2xl font-bold mb-4">Schedule Detail</h1>
+      {/* Main Content */}
+      <div className="bg-[#E8DFD0] rounded-3xl p-4 flex-1 flex flex-col">
+        <h2 className="text-xl md:text-2xl font-bold mb-4 truncate text-center">Schedule Detail</h2>
 
-      {loading && <p>Loading route...</p>}
-      {error && <p className="text-red-500">{error}</p>}
-      {/* New Booking Details Section */}
-      <div className="mt-8">
-        <h2 className="text-xl font-semibold mb-4">Booking Information</h2>
+        {loading && (
+          <div className="flex items-center justify-center p-4">
+            <div className="animate-spin h-6 w-6 border-3 border-[#2F4F3A] border-t-transparent rounded-full"></div>
+          </div>
+        )}
         
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* Confirmations */}
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-medium mb-3">Booking Confirmations</h3>
-            <ul className="space-y-2">
-              <li className="flex items-center">
-                <span className="text-green-500 mr-2">✓</span>
-                Hotel Reservation #12345
-              </li>
-              <li className="flex items-center">
-                <span className="text-green-500 mr-2">✓</span>
-                Flight Booking #AB678
-              </li>
-              <li className="flex items-center">
-                <span className="text-green-500 mr-2">✓</span>
-                Car Rental Confirmation #CR999
-              </li>
-            </ul>
+        {error && (
+          <div className="bg-red-50 text-red-500 p-3 rounded-lg text-sm text-center">
+            {error}
+          </div>
+        )}
+
+        <div className="space-y-3 flex-1">
+          {/* Booking Details */}
+          <div className="grid md:grid-cols-2 gap-3">
+            <div className="border border-[#2F4F3A] rounded-lg p-3">
+              <h3 className="text-lg font-bold mb-2">Booking Confirmations</h3>
+              <ul className="space-y-1.5 text-sm">
+                <li className="flex items-center">
+                  <span className="text-green-500 mr-2">✓</span>
+                  Hotel Reservation #12345
+                </li>
+              </ul>
+            </div>
+
+            <div className="border border-[#2F4F3A] rounded-lg p-3">
+              <h3 className="text-lg font-bold mb-2">Required Documents</h3>
+              <ul className="space-y-1.5 text-sm">
+                <li className="flex items-center">
+                  <span className="text-[#2F4F3A] mr-2">📄</span>
+                  Passport/ID
+                </li>
+                <li className="flex items-center">
+                  <span className="text-[#2F4F3A] mr-2">📄</span>
+                  Vaccination Records
+                </li>
+                <li className="flex items-center">
+                  <span className="text-[#2F4F3A] mr-2">📄</span>
+                  Travel Insurance
+                </li>
+              </ul>
+            </div>
           </div>
 
-          {/* Important Documents */}
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-medium mb-3">Required Documents</h3>
-            <ul className="space-y-2">
-              <li className="flex items-center">
-                <span className="text-blue-500 mr-2">📄</span>
-                Passport/ID
-              </li>
-              <li className="flex items-center">
-                <span className="text-blue-500 mr-2">📄</span>
-                Vaccination Records
-              </li>
-              <li className="flex items-center">
-                <span className="text-blue-500 mr-2">📄</span>
-                Travel Insurance
-              </li>
-            </ul>
-          </div>
-
-          {/* Things to Notice */}
-          <div className="bg-white p-6 rounded-lg shadow md:col-span-2">
-            <h3 className="text-lg font-medium mb-3">Important Notices</h3>
-            <ul className="space-y-2">
+          {/* Important Notices */}
+          <div className="border border-[#2F4F3A] rounded-lg p-3">
+            <h3 className="text-lg font-bold mb-2">Important Notices</h3>
+            <ul className="space-y-1.5 text-sm">
               <li className="flex items-start">
-                <span className="text-yellow-500 mr-2">⚠️</span>
+                <span className="text-[#2F4F3A] mr-2">⚠️</span>
                 <p>Check-in time at the hotel is after 3:00 PM</p>
               </li>
               <li className="flex items-start">
-                <span className="text-yellow-500 mr-2">⚠️</span>
+                <span className="text-[#2F4F3A] mr-2">⚠️</span>
                 <p>Remember to bring appropriate clothing for the weather</p>
               </li>
               <li className="flex items-start">
-                <span className="text-yellow-500 mr-2">⚠️</span>
+                <span className="text-[#2F4F3A] mr-2">⚠️</span>
                 <p>Local currency is required for some activities</p>
               </li>
             </ul>
           </div>
+          <div className="border border-[#2F4F3A] rounded-lg p-3">
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="text-lg font-bold">Route Map</h3>
+              <button className="bg-[#2F4F3A] text-[#E8DFD0] px-3 py-1.5 rounded-full text-sm font-medium">
+                Get me there
+              </button>
+            </div>
+            <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+              <GoogleMap
+                mapContainerStyle={mapContainerStyle}
+                center={{ lat: 40.7128, lng: -74.0060 }}
+                zoom={12}
+              >
+                {directions && <DirectionsRenderer directions={directions} />}
+              </GoogleMap>
+            </LoadScript>
+          </div>
         </div>
       </div>
-      
-      <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-        <GoogleMap
-          mapContainerStyle={mapContainerStyle}
-          center={{ lat: 40.7128, lng: -74.0060 }} // Default to NYC coordinates
-          zoom={12}>
-          {directions && (
-            <DirectionsRenderer
-              directions={directions}
-            />
-          )}
-        </GoogleMap>
-      </LoadScript>
+
+      {/* Input Bar */}
+      <InputBar />
     </div>
   );
 };
