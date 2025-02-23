@@ -321,5 +321,13 @@ async def get_new_bookings():
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@app.get("/api/conversations/{conversation_id}")
+async def get_conversation(conversation_id: str):
+    try:
+        return await elevenlabs_service.get_conversation_history(conversation_id)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 if __name__ == '__main__':
     uvicorn.run(app, host="0.0.0.0", port=8000)
