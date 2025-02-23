@@ -10,7 +10,7 @@ const Navigation = () => {
 
   useEffect(() => {
     // Hide navigation on PreLanding page
-    setIsVisible(location.pathname !== '/');
+    setIsVisible(false);
   }, [location.pathname]);
 
   if (!isVisible) return null;

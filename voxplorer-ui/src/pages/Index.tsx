@@ -1,11 +1,8 @@
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { ChevronDown } from "lucide-react";
-import FeatureCards from "@/components/FeatureCards";
-import TravelPlan from "@/components/TravelPlan";
 import { useNavigate } from "react-router-dom";
-import { API_BASE_URL } from "@/config/api";
-
+import { ChevronDown, MessageSquare } from "lucide-react";
+import TravelPlan from "@/components/TravelPlan";
+import FeatureCards from "@/components/FeatureCards";
 interface Schedule {
   time: string;
   activity: string;
@@ -49,60 +46,81 @@ const Index = () => {
     fetchTravelPlans();
   }, []);
 
-  const toggleCards = () => {
-    setIsExpanded(!isExpanded);
-  };
-
   const handleNewBooking = () => {
     navigate('/new-booking');
   };
 
+  const toggleCards = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-b from-white to-gray-50">
-      <div className="w-full max-w-4xl animate-fade-in">
-        <h1 className="text-4xl md:text-5xl font-bold text-center mb-6">
-          Voxplorer -Your Personal Travel Companion
-        </h1>
-        <p className="text-lg text-center text-gray-600 mb-12 max-w-2xl mx-auto">
-          Plan your journey, overcome language barriers, and share your adventures with our all-in-one travel platform.
-        </p>
+    <div className="min-h-screen bg-[#2F4F3A] p-6 flex flex-col">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-8">
+        <button className="text-[#E8DFD0]">
+          <div className="w-6 h-0.5 bg-[#E8DFD0] mb-1.5"></div>
+          <div className="w-6 h-0.5 bg-[#E8DFD0]"></div>
+        </button>
+        <h1 className="text-3xl font-semibold text-[#E8DFD0]">Voxplorer</h1>
+        <button className="text-[#E8DFD0]">
+          <MessageSquare />
+        </button>
+      </div>
+
+      {/* Main Content */}
+      <div className="bg-[#E8DFD0] rounded-3xl p-6 flex-1 flex flex-col">
+        <h2 className="text-4xl font-bold mb-8">Your Travel Plans</h2>
 
         {isLoading ? (
-          <div className="text-center p-4">
-            <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
-            <p>Loading travel plans...</p>
+          <div className="flex items-center justify-center p-8">
+            <div className="animate-spin h-8 w-8 border-4 border-[#2F4F3A] border-t-transparent rounded-full"></div>
           </div>
         ) : error ? (
-          <div className="text-red-500 p-4 text-center bg-red-50 rounded-lg">
+          <div className="bg-red-50 text-red-500 p-4 rounded-xl text-center">
             {error}
           </div>
         ) : (
-          <TravelPlan plans={travelPlans} />
+          <div className="space-y-4 flex-1">
+            <TravelPlan plans={travelPlans} />
+          </div>
         )}
-        
-        <div className="flex justify-end mb-4">
-          <Button
-            variant="ghost"
-            onClick={toggleCards}
-            className="flex items-center gap-2"
+
+        <div className="flex gap-2 mt-auto mb-4">
+          <button 
+            onClick={handleNewBooking}
+            className="flex-1 bg-[#2F4F3A] text-[#E8DFD0] py-3 px-4 rounded-3xl text-base font-semibold"
           >
-            {isExpanded ? 'Hide Features' : 'Show Features'}
-            <ChevronDown 
-              className={`w-5 h-5 transition-transform duration-300 ${
-                isExpanded ? 'rotate-180' : ''
-              }`}
-            />
-          </Button>
+            Create new booking
+          </button>
+          <button 
+            className="flex-1 bg-[#9DC88D] text-[#2F4F3A] py-3 px-4 rounded-3xl text-base font-semibold"
+          >
+            Edit existing booking
+          </button>
+          {/* <FeatureCards isExpanded={isExpanded} /> */}
+
         </div>
-        <FeatureCards isExpanded={isExpanded} />
-        
-        <div className="flex justify-center gap-4 mt-6">
-          <Button variant="default" onClick={handleNewBooking}>
-            New
-          </Button>
-          <Button variant="outline">
-            Modify
-          </Button>
+      </div>
+
+      {/* Bottom Input Bar */}
+      <div className="mt-6 relative">
+        <div className="bg-[#E8DFD0] rounded-full p-4 flex items-center gap-3">
+          <button className="w-8 h-8 rounded-full bg-[#9DC88D] flex items-center justify-center">
+            <span className="text-[#2F4F3A] text-xl font-bold">+</span>
+          </button>
+          <input
+            type="text"
+            placeholder="Ask Voxie a question.."
+            className="flex-1 bg-transparent outline-none text-[#2F4F3A] placeholder-gray-500"
+          />
+          <button>
+            <div className="w-6 h-6 bg-[#9DC88D] rounded-full"></div>
+          </button>
+          <button onClick={toggleCards}>
+            <div className="w-6 h-6 bg-[#9DC88D] rounded-full"></div>
+          </button>
         </div>
       </div>
     </div>

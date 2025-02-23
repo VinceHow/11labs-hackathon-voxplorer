@@ -7,6 +7,8 @@ interface FeatureCardsProps {
 }
 
 const FeatureCards = ({ isExpanded }: FeatureCardsProps) => {
+  if (!isExpanded) return null;
+
   const navigate = useNavigate();
   
   const cards = [
@@ -41,28 +43,28 @@ const FeatureCards = ({ isExpanded }: FeatureCardsProps) => {
   ];
 
   return (
-    <div className={`grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 transition-all duration-300 ${
-      isExpanded ? 'opacity-100 max-h-[1000px]' : 'opacity-0 max-h-0 overflow-hidden'
-    }`}>
-      {cards.map((card, index) => (
-        <div 
-          key={index}
-          className="glass-card p-6 rounded-lg hover-lift transition-all duration-300"
-        >
-          <div className="flex justify-between items-start mb-4">
-            <div className="mb-4">{card.icon}</div>
-          </div>
-          <h2 className="text-xl font-semibold mb-2">{card.title}</h2>
-          <p className="text-gray-600 mb-4">{card.description}</p>
-          <Button 
-            variant="outline" 
-            className="w-full"
-            onClick={() => navigate(card.route)}
+    <div className="absolute bottom-20 left-0 right-0 bg-[#E8DFD0] p-4 rounded-2xl shadow-lg">
+      <div className="grid grid-cols-2 gap-4">
+        {cards.map((card, index) => (
+          <div 
+            key={index}
+            className="bg-[#9DC88D] p-4 rounded-xl"
           >
-            {card.buttonText}
-          </Button>
-        </div>
-      ))}
+            <div className="flex justify-between items-start mb-4">
+              <div className="mb-4">{card.icon}</div>
+            </div>
+            <h3 className="text-[#2F4F3A] font-semibold mb-2">{card.title}</h3>
+            <p className="text-[#2F4F3A] text-sm mb-4">{card.description}</p>
+            <Button 
+              variant="outline" 
+              className="w-full"
+              onClick={() => navigate(card.route)}
+            >
+              {card.buttonText}
+            </Button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
