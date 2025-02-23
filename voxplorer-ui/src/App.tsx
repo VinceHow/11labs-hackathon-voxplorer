@@ -12,6 +12,7 @@ import ManagePage from './pages/ManagePage';
 import NewBooking from "@/pages/NewBooking";
 import Narrate from "@/pages/Narrate";
 import PreLanding from "@/pages/PreLanding";
+import Welcome from "@/pages/Welcome";
 
 const queryClient = new QueryClient();
 
@@ -27,10 +28,10 @@ const App = () => (
             <Route path="/" element={<PreLanding />} />
             <Route path="/home" element={<Index />} />
             <Route path="/schedule/:day/:scheduleIndex" element={<ScheduleDetail />} />
-            <Route path="/itinerary" element={<ItineraryDetail />} />
             <Route path="/manage" element={<ManagePage />} />
             <Route path="/new-booking" element={<NewBooking />} />
             <Route path="/narrate" element={<Narrate />} />
+            <Route path="/welcome" element={<Welcome />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
