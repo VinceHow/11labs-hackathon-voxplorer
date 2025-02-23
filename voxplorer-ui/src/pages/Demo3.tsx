@@ -5,7 +5,7 @@ const Demo3 = () => {
   return (
     <DemoScreen
       imageUrl={IMAGES.DEMO_3}
-      redirectUrl="/demo-4"
+      redirectUrl="/site/1"
       altText="Demo Screen 3"
     />
   );
