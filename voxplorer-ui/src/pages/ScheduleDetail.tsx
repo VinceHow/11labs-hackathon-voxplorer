@@ -126,7 +126,7 @@ const ScheduleDetail = () => {
             <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
               <GoogleMap
                 mapContainerStyle={mapContainerStyle}
-                center={{ lat: 40.7128, lng: -74.0060 }}
+                center={{ lat: 34.4359, lng: 135.243 }}
                 zoom={12}
               >
                 {directions && <DirectionsRenderer directions={directions} />}

@@ -13,9 +13,8 @@ gmaps = Client(key=os.environ.get('GOOGLE_MAPS_API_KEY'))
 async def get_route(day: int, schedule_index: int) -> Dict[str, Any]:
     # Replace with your actual locations
     waypoints = [
-        "Times Square, New York",
-        "Central Park, New York",
-        "Empire State Building, New York"
+        "Kansai Airport, Osaka",
+        "Hotel Gion, Kyoto",
     ]
 
     try:
