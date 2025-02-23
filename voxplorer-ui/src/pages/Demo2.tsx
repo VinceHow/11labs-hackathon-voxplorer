@@ -1,9 +1,10 @@
+import { IMAGES } from "@/constants/images";
 import DemoScreen from "../components/DemoScreen";
 
 const Demo2 = () => {
   return (
     <DemoScreen
-      imageUrl="/demo/screen2.png"
+      imageUrl={IMAGES.DEMO_2}
       redirectUrl="/demo-3"
       altText="Demo Screen 2"
     />
