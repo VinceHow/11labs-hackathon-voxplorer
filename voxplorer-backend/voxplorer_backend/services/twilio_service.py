@@ -90,15 +90,15 @@ class TwilioService:
                     twilio_to_eleven = asyncio.create_task(self._handle_twilio_messages(websocket, audio_interface))
                     eleven_to_twilio = asyncio.create_task(self._handle_elevenlabs_messages(elevenlabs_ws, audio_interface))
                     
-                    # Wait for either task to complete
+                    # Wait for either task to complete (2 minutes = 120 seconds)
                     await asyncio.wait(
                         [twilio_to_eleven, eleven_to_twilio],
-                        timeout=15.0,
+                        timeout=120.0,
                         return_when=asyncio.FIRST_COMPLETED
                     )
                     
                 except asyncio.TimeoutError:
-                    print("Connection timed out after 15 seconds")
+                    print("Connection timed out after 2 minutes")
                 except Exception as e:
                     print(f"Error in audio handling: {str(e)}")
                 finally:
@@ -126,7 +126,6 @@ class TwilioService:
         try:
             while True:
                 message = await elevenlabs_ws.recv()
-                print(f"Received from ElevenLabs: {message[:100]}...")  # Debug log
                 data = json.loads(message)
                 
                 # Handle different types of messages
@@ -144,11 +143,15 @@ class TwilioService:
 
 async def forward_audio(source, destination):
     try:
-        while True:  # Keep listening for messages
+        print(f"Starting audio forwarding from {type(source).__name__} to {type(destination).__name__}")
+        message_count = 0
+        while True:
             if isinstance(source, WebSocket):  # FastAPI WebSocket
                 message = await source.receive_text()
+                print(f"Received from Twilio (message {message_count}): {message[:100]}...")
             else:  # Regular websockets connection
                 message = await source.recv()
+                print(f"Received from ElevenLabs (message {message_count}): {message[:100]}...")
                 
             if isinstance(message, str):
                 try:
@@ -157,6 +160,10 @@ async def forward_audio(source, destination):
                     # Handle Twilio -> ElevenLabs
                     if "event" in data:
                         if data["event"] == "media":
+                            print(f"Forwarding media from Twilio to ElevenLabs (message {message_count})")
+                            payload_size = len(data["media"]["payload"]) if "media" in data else 0
+                            print(f"Media payload size: {payload_size} bytes")
+                            
                             if isinstance(destination, WebSocket):
                                 await destination.send_text(json.dumps({
                                     "user_audio_chunk": data["media"]["payload"]
@@ -174,10 +181,15 @@ async def forward_audio(source, destination):
                             audio_chunk = None
                             if "audio" in data and "chunk" in data["audio"]:
                                 audio_chunk = data["audio"]["chunk"]
+                                print("Found audio chunk in data['audio']['chunk']")
                             elif "audio_event" in data and "audio_base_64" in data["audio_event"]:
                                 audio_chunk = data["audio_event"]["audio_base_64"]
+                                print("Found audio chunk in data['audio_event']['audio_base_64']")
                             
                             if audio_chunk:
+                                print(f"Forwarding audio from ElevenLabs to Twilio (message {message_count})")
+                                print(f"Audio chunk size: {len(audio_chunk)} bytes")
+                                
                                 if isinstance(destination, WebSocket):
                                     await destination.send_text(json.dumps({
                                         "event": "media",
@@ -192,7 +204,11 @@ async def forward_audio(source, destination):
                                             "payload": audio_chunk
                                         }
                                     }))
+                            else:
+                                print("Warning: Received audio message but no chunk found")
+                                print(f"Full message structure: {json.dumps(data, indent=2)}")
                         elif data["type"] == "interruption":
+                            print("Received interruption event")
                             if isinstance(destination, WebSocket):
                                 await destination.send_text(json.dumps({
                                     "event": "clear"
@@ -202,13 +218,18 @@ async def forward_audio(source, destination):
                                     "event": "clear"
                                 }))
                         
-                except json.JSONDecodeError:
+                except json.JSONDecodeError as e:
+                    print(f"JSON decode error: {str(e)}")
                     print("Received non-JSON message:", message[:100])
             else:
-                print("Received non-string message")
+                print(f"Received non-string message of type: {type(message)}")
+            
+            message_count += 1
                 
     except websockets.exceptions.ConnectionClosed:
         print("WebSocket connection closed")
     except Exception as e:
         print(f"Error in audio forwarding: {str(e)}")
-        print(f"Message that caused error: {message[:200] if isinstance(message, str) else 'non-string'}")
+        print(f"Error type: {type(e)}")
+        if isinstance(message, str):
+            print(f"Last message received: {message[:200]}")

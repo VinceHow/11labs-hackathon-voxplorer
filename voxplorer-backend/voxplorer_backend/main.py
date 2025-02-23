@@ -178,6 +178,16 @@ async def handle_media_stream(websocket: WebSocket):
     connection_id = id(websocket)
     print(f"Connection ID: {connection_id}")
 
+    # Add heartbeat task
+    async def heartbeat():
+        while True:
+            try:
+                await asyncio.sleep(20)  # Send heartbeat every 20 seconds
+                await websocket.send_text(json.dumps({"event": "heartbeat"}))
+            except Exception as e:
+                print(f"Heartbeat error: {e}")
+                break
+
     try:
         agent_id = os.getenv("ELEVENLABS_AGENT_ID")
         api_key = os.getenv("ELEVENLABS_API_KEY")
@@ -221,7 +231,6 @@ async def handle_media_stream(websocket: WebSocket):
                     try:
                         message = await websocket.receive_text()
                         data = json.loads(message)
-                        print(f"Received from Twilio: {message[:100]}...")
 
                         if data["event"] == "start":
                             stream_sid = data["start"]["streamSid"]
@@ -240,7 +249,6 @@ async def handle_media_stream(websocket: WebSocket):
                     try:
                         message = await elevenlabs_ws.recv()
                         data = json.loads(message)
-                        print(f"Received from ElevenLabs: {message[:100]}...")
 
                         if data["type"] == "audio":
                             if not stream_sid:
@@ -269,14 +277,12 @@ async def handle_media_stream(websocket: WebSocket):
                         break
 
             print(f"Starting audio forwarding for connection {connection_id}")
-            try:
-                await asyncio.gather(
-                    forward_twilio_to_elevenlabs(),
-                    forward_elevenlabs_to_twilio()
-                )
-            except Exception as e:
-                print(f"Error in audio forwarding tasks: {str(e)}")
-                print(f"Error type: {type(e)}")
+            # Add heartbeat to the gather
+            await asyncio.gather(
+                heartbeat(),
+                forward_twilio_to_elevenlabs(),
+                forward_elevenlabs_to_twilio()
+            )
 
     except WebSocketDisconnect:
         print(f"WebSocket disconnected (Connection ID: {connection_id})")
@@ -298,7 +304,7 @@ async def create_booking(request: BookingRequest):
         booking_details = {
             "time": request.time,
             "location": request.location,
-            "additional_details": request.addtional_details,
+            "additional_details": request.additional_details,
         }
         return booking_details
     except Exception as e:
