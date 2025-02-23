@@ -6,8 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="acfb3077-d2e0-464e-b9ff-f77777153a52" name="Changes" comment="add">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../voxplorer-backend/voxplorer_backend/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../voxplorer-backend/voxplorer_backend/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../voxplorer-ui/src/pages/Narrate.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../voxplorer-ui/src/pages/Narrate.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
