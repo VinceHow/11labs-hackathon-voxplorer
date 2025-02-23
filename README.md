@@ -1,18 +1,7 @@
-# Voxplorer - AI-Powered Voice Communication Platform
+# Voxie - Your AI-Powered Travel Companion
 
 ## Overview
-Voxplorer is a cutting-edge voice communication platform that leverages advanced AI technologies to enable natural, context-aware conversations. Built with ElevenLabs' state-of-the-art voice AI and real-time communication capabilities, Voxplorer transforms how businesses interact with their customers through intelligent voice agents.
-
-## Key Features
-- 🎙️ Real-time Voice AI Conversations
-- 🧠 Context-Aware Response Generation
-- 🔄 Seamless WebSocket Integration
-- 📝 Automatic Conversation Transcription
-- 🌐 Multi-Channel Communication Support
-- 📊 Conversation Analytics & Metrics
-- 🎯 Custom Voice Agent Configuration
-
-## Technology Stack
+Voxie is a AI travel agent that transforms how you plan and experience your journeys. Using advanced voice AI technology and natural conversation, Voxie helps you create personalized travel itineraries, make bookings, and get real-time travel assistance - all through natural voice conversations.
 
 ### Backend (Python)
 - **FastAPI** - High-performance async web framework
