@@ -6,6 +6,7 @@ import { IMAGES } from '@/constants/images';
 
 const Welcome = () => {
   const [isExpanded, setIsExpanded] = useState(true);
+  const [isRentalExpanded, setIsRentalExpanded] = useState(false);
   const navigate = useNavigate();
 
   return (
@@ -69,6 +70,7 @@ const Welcome = () => {
                   className="w-full rounded-xl border border-[#2F4F3A]"
                 />
               </div>
+
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
                   <div className="w-4 h-4 rounded-full bg-[#2F4F3A] mt-1"></div>
@@ -79,12 +81,54 @@ const Welcome = () => {
                 <img 
                   src={IMAGES.RENTAL}
                   alt="Car rental" 
-                  className="w-full rounded-xl border border-[#2F4F3A]"
+                  className="w-full rounded-xl border border-[#2F4F3A] cursor-pointer"
+                  onClick={() => {
+                    setIsRentalExpanded(!isRentalExpanded);
+                    setIsExpanded(false);
+                  }}
                 />
               </div>
             </div>
           )}
         </div>
+
+        {/* Car Rental Details Section */}
+        {isRentalExpanded && (
+          <div className="border-2 border-[#2F4F3A] rounded-xl p-4">
+            <img 
+                  src={IMAGES.RENTAL}
+                  alt="Car rental" 
+                  className="w-full rounded-xl border border-[#2F4F3A] cursor-pointer"
+                />
+            <div className="flex justify-between items-center">
+              <h3 className="text-2xl font-bold">Rental Details</h3>
+              <ChevronUp className="h-6 w-6" />
+            </div>
+
+            <div className="space-y-6 mt-4">
+              {/* Booking Reference */}
+              <div className="bg-[#E8DFD0] rounded-xl p-4 border border-[#2F4F3A]">
+                <h4 className="text-xl font-bold mb-1">Booking reference:</h4>
+                <p className="text-xl">#CR999</p>
+              </div>
+
+              {/* Required Documents */}
+              <div className="bg-[#E8DFD0] rounded-xl p-4 border border-[#2F4F3A]">
+                <h4 className="text-xl font-bold mb-2">Required documents</h4>
+                <ul className="space-y-2">
+                  <li className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-[#2F4F3A]"></div>
+                    <span className="text-lg">Passport/ID</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-[#2F4F3A]"></div>
+                    <span className="text-lg">Travel insurance</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Input Bar */}
