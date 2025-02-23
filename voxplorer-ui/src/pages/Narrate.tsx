@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { Mic, Send, Image as ImageIcon, X } from "lucide-react";
-import { API_BASE_URL } from "@/config/api";
 
 interface Message {
   id: string;

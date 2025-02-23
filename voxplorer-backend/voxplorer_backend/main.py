@@ -308,7 +308,7 @@ async def create_booking(request: BookingRequest):
             "additional_details": request.additional_details,
         }
         booking_storage[booking_id] = booking_details
-        return booking_details
+        return booking_storage
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
