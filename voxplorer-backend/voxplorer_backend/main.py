@@ -24,7 +24,7 @@ load_dotenv()
 import uvicorn
 
 app = FastAPI()
-
+booking_storage = {}
 app.include_router(route_planner.router)
 origins = [
     "http://localhost:8080",
@@ -301,12 +301,22 @@ class BookingRequest(BaseModel):
 async def create_booking(request: BookingRequest):
     try:
         # Here you would typically save to a database
+        booking_id = "BK" + datetime.now().strftime("%Y%m%d%H%M")
         booking_details = {
             "time": request.time,
             "location": request.location,
             "additional_details": request.additional_details,
         }
+        booking_storage[booking_id] = booking_details
         return booking_details
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/bookings")
+async def get_new_bookings():
+    try:
+        return booking_storage
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
