@@ -173,51 +173,53 @@ const Narrate = () => {
       </div>
 
       {/* Chat Container */}
-      <div className="flex-1 bg-[#E8DFD0] rounded-3xl p-4 overflow-y-auto mb-4">
-        <div className="flex items-center gap-2 mb-4">
+      <div className="flex-1 bg-[#E8DFD0] rounded-3xl p-4 overflow-y-auto mb-4 max-h-[calc(100vh-220px)]">
+        <div className="flex items-center gap-2 mb-4 sticky top-0 bg-[#E8DFD0] z-10 pb-2">
           <div className="w-8 h-8 rounded-full bg-[#2F4F3A] flex items-center justify-center">
             <Activity className="h-5 w-5 text-[#E8DFD0]" />
           </div>
           <span className="text-xl font-bold">Voxie</span>
         </div>
 
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} mb-2`}
-          >
-            <div className={`max-w-[80%] p-3 rounded-2xl ${
-              message.type === 'user' 
-                ? 'bg-[#2F4F3A] text-white' 
-                : 'bg-[#333333] text-white'
-            }`}>
-              {message.imageUrl && (
-                <img 
-                  src={message.imageUrl} 
-                  alt="Sent image" 
-                  className="w-full rounded-lg mb-1"
-                />
-              )}
-              <p className="text-sm leading-relaxed">{message.content}</p>
-              <div className="flex justify-between items-center mt-1">
-                <div className={`text-[10px] ${
-                  message.type === 'user' ? 'text-gray-300' : 'text-gray-400'
-                }`}>
-                  {new Date(message.timestamp).toLocaleTimeString()}
-                </div>
-                {message.type === 'assistant' && (
-                  <button 
-                    onClick={() => navigate('/site/1')}
-                    className="bg-[#9DC88D] text-[#2F4F3A] p-1 rounded-full"
-                  >
-                    <ChevronRight className="w-3 h-3" />
-                  </button>
+        <div className="space-y-2">
+          {messages.map((message) => (
+            <div
+              key={message.id}
+              className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} mb-2`}
+            >
+              <div className={`max-w-[80%] p-3 rounded-2xl ${
+                message.type === 'user' 
+                  ? 'bg-[#2F4F3A] text-white' 
+                  : 'bg-[#333333] text-white'
+              }`}>
+                {message.imageUrl && (
+                  <img 
+                    src={message.imageUrl} 
+                    alt="Sent image" 
+                    className="w-full rounded-lg mb-1"
+                  />
                 )}
+                <p className="text-sm leading-relaxed">{message.content}</p>
+                <div className="flex justify-between items-center mt-1">
+                  <div className={`text-[10px] ${
+                    message.type === 'user' ? 'text-gray-300' : 'text-gray-400'
+                  }`}>
+                    {new Date(message.timestamp).toLocaleTimeString()}
+                  </div>
+                  {message.type === 'assistant' && (
+                    <button 
+                      onClick={() => navigate('/site/1')}
+                      className="bg-[#9DC88D] text-[#2F4F3A] p-1 rounded-full"
+                    >
+                      <ChevronRight className="w-3 h-3" />
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-        <div ref={messagesEndRef} />
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
       </div>
 
       {/* Selected Image Preview */}
