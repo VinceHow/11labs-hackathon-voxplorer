@@ -8,17 +8,17 @@ def get_all_plan(user:str="Demo"):
             "schedules": [
                 {
                     "time": "09:00 AM",
-                    "activity": "Check-in at Hotel Sunrise",
+                    "activity": "Land at Kansai Airport",
                     "location": "123 Beach Road"
                 },
                 {
                     "time": "11:00 AM",
-                    "activity": "City Tour",
+                    "activity": "Check-in at Hotel Gion",
                     "location": "Downtown Area"
                 },
                 {
                     "time": "02:00 PM",
-                    "activity": "Lunch at Local Restaurant",
+                    "activity": "Lunch at Ichiban Curry",
                     "location": "Harbor View Restaurant"
                 }
             ]

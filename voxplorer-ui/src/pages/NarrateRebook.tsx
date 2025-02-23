@@ -55,7 +55,7 @@ const RestaurantTab = ({ name, rating, description }: { name: string, rating: st
           </div>
           <button 
             className="bg-white/20 p-2 rounded-full"
-            onClick={() => navigate('/call')}
+            onClick={() => navigate('/new-booking')}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M7 17l9.2-9.2M17 17V8H8" />
