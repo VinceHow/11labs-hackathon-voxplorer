@@ -1,0 +1,137 @@
+{
+  "agent_id": "Icbs4AcIxol3hIKv0v7d",
+  "conversation_id": "FV95HB0I102G9UyRFwvh",
+  "status": "done",
+  "transcript": [
+    {
+      "role": "agent",
+      "message": "Hello, I'm the restaurant booking assistant. I'm calling on behalf of Mr. Hao to confirm a reservation for two guests today at 7:00 PM. Is this a convenient time to confirm the booking?",
+      "tool_calls": null,
+      "tool_results": null,
+      "feedback": null,
+      "time_in_call_secs": 0,
+      "conversation_turn_metrics": null
+    },
+    {
+      "role": "user",
+      "message": "Yeah, sure.",
+      "tool_calls": null,
+      "tool_results": null,
+      "feedback": null,
+      "time_in_call_secs": 10,
+      "conversation_turn_metrics": null
+    },
+    {
+      "role": "agent",
+      "message": "Great, thank you. I'd like to confirm a reservation for Mr. Vincent Hao for this evening at 7:00 PM. It's for two people, and it's a birthday celebration. Could you please check if you have availability for this booking?",
+      "tool_calls": null,
+      "tool_results": null,
+      "feedback": null,
+      "time_in_call_secs": 14,
+      "conversation_turn_metrics": {
+        "convai_llm_service_ttfb": {
+          "elapsed_time": 0.9902514720015461
+        },
+        "convai_llm_service_ttf_sentence": {
+          "elapsed_time": 1.0927530329936417
+        }
+      }
+    },
+    {
+      "role": "user",
+      "message": "Cool. I just checked. We do have availability.",
+      "tool_calls": null,
+      "tool_results": null,
+      "feedback": null,
+      "time_in_call_secs": 27,
+      "conversation_turn_metrics": null
+    },
+    {
+      "role": "agent",
+      "message": "Excellent, thank you for checking. I'm glad to hear you have availability. Could you please confirm that you've noted it's for Mr. Vincent Hao, two people, today at 7:00 PM, and it's for a birthday celebration? Also, the contact number for the reservation is...",
+      "tool_calls": null,
+      "tool_results": null,
+      "feedback": null,
+      "time_in_call_secs": 33,
+      "conversation_turn_metrics": {
+        "convai_llm_service_ttfb": {
+          "elapsed_time": 2.5597962710016873
+        },
+        "convai_llm_service_ttf_sentence": {
+          "elapsed_time": 1.662177469013841
+        }
+      }
+    },
+    {
+      "role": "user",
+      "message": "Yeah, I've noted everything down.",
+      "tool_calls": null,
+      "tool_results": null,
+      "feedback": null,
+      "time_in_call_secs": 45,
+      "conversation_turn_metrics": null
+    },
+    {
+      "role": "agent",
+      "message": "Wonderful, thank you for confirming. Since all the details have been confirmed, I'll go ahead and finalize the booking. Is there anything else you need from me regarding this reservation?",
+      "tool_calls": null,
+      "tool_results": null,
+      "feedback": null,
+      "time_in_call_secs": 48,
+      "conversation_turn_metrics": {
+        "convai_llm_service_ttfb": {
+          "elapsed_time": 0.7430463959899498
+        },
+        "convai_llm_service_ttf_sentence": {
+          "elapsed_time": 0.7891340289934305
+        }
+      }
+    },
+    {
+      "role": "user",
+      "message": "Nope.",
+      "tool_calls": null,
+      "tool_results": null,
+      "feedback": null,
+      "time_in_call_secs": 57,
+      "conversation_turn_metrics": null
+    }
+  ],
+  "metadata": {
+    "start_time_unix_secs": 1740304859,
+    "call_duration_secs": 60,
+    "cost": 401,
+    "deletion_settings": {
+      "deletion_time_unix_secs": 1803376919,
+      "deleted_logs_at_time_unix_secs": null,
+      "deleted_audio_at_time_unix_secs": null,
+      "deleted_transcript_at_time_unix_secs": null,
+      "delete_transcript_and_pii": true,
+      "delete_audio": true
+    },
+    "feedback": {
+      "overall_score": null,
+      "likes": 0,
+      "dislikes": 0
+    },
+    "authorization_method": "public",
+    "charging": {
+      "dev_discount": false
+    },
+    "termination_reason": ""
+  },
+  "analysis": {
+    "evaluation_criteria_results": {},
+    "data_collection_results": {},
+    "call_successful": "success",
+    "transcript_summary": "This conversation summarizes a restaurant booking confirmation call between a booking assistant and a restaurant representative. The assistant called on behalf of Mr. Vincent Hao to confirm a reservation for two people at 7:00 PM on the same day. The restaurant confirmed availability for the requested time and date.\n\nThe assistant provided key details about the reservation, including that it was for a birthday celebration. The restaurant representative acknowledged noting down all the information, including the guest's name, party size, date, time, and special occasion.\n\nThe call concluded with the assistant finalizing the booking and asking if any additional information was needed. The restaurant representative indicated that no further details were required. The overall tone of the conversation was professional and efficient, with both parties quickly addressing the necessary points to confirm the reservation."
+  },
+  "conversation_initiation_client_data": {
+    "conversation_config_override": {
+      "agent": null,
+      "tts": null
+    },
+    "custom_llm_extra_body": {},
+    "dynamic_variables": {}
+  }
+}
