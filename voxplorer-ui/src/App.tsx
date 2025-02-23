@@ -13,6 +13,7 @@ import NewBooking from "@/pages/NewBooking";
 import Narrate from "@/pages/Narrate";
 import PreLanding from "@/pages/PreLanding";
 import Welcome from "@/pages/Welcome";
+import SiteDetail from "@/pages/SiteDetail";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,8 @@ const App = () => (
             <Route path="/new-booking" element={<NewBooking />} />
             <Route path="/narrate" element={<Narrate />} />
             <Route path="/welcome" element={<Welcome />} />
+            <Route path="/itinerary" element={<ItineraryDetail />} />
+            <Route path="/site/:id" element={<SiteDetail />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
