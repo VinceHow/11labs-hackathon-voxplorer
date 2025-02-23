@@ -88,15 +88,15 @@ const Index = () => {
           </div>
         )}
 
-        <div className="flex gap-2 mt-auto mb-4">
+        <div className="flex gap-4 mt-auto mb-6">
           <button 
             onClick={handleNewBooking}
-            className="flex-1 bg-[#2F4F3A] text-[#E8DFD0] py-3 px-4 rounded-3xl text-base font-semibold"
+            className="flex-1 bg-[#2F4F3A] text-[#E8DFD0] py-4 px-6 rounded-3xl text-lg font-semibold hover:bg-[#1F3F2A] transition-colors"
           >
             Create new booking
           </button>
           <button 
-            className="flex-1 bg-[#9DC88D] text-[#2F4F3A] py-3 px-4 rounded-3xl text-base font-semibold"
+            className="flex-1 bg-[#9DC88D] text-[#2F4F3A] py-4 px-6 rounded-3xl text-lg font-semibold hover:bg-[#8DB87D] transition-colors"
           >
             Edit existing booking
           </button>
