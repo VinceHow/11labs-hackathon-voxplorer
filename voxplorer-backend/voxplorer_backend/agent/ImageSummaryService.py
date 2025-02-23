@@ -24,7 +24,7 @@ class ImageSummaryService:
 
     @staticmethod
     def generate_summary(labels):
-        prompt = f"Provide a brief summary about the following objects or landmarks: {', '.join(labels)}"
+        prompt = f"Provide a brief summary about the following objects or landmarks, introduce it from your best knowledge: {', '.join(labels)}"
         response = client.completions.create(
         model="gpt-3.5-turbo-instruct",
         prompt=prompt,

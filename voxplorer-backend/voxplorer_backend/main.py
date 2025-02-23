@@ -132,7 +132,7 @@ async def image_summary(file: UploadFile = File(...)):
             file_object.write(file.file.read())
 
         summary = ImageSummaryService.get_image_summary(file_location)
-        return {"summary": summary}
+        return {"message": summary}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

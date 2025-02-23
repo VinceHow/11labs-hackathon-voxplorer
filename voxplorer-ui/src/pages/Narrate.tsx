@@ -11,6 +11,7 @@ interface Message {
   contentType: 'text' | 'image' | 'audio';
   timestamp: string;
   status?: string;
+  imageUrl?: string;
 }
 
 const Narrate = () => {
@@ -47,7 +48,8 @@ const Narrate = () => {
       content: selectedImage ? 'Sent an image' : inputText,
       contentType: selectedImage ? 'image' : 'text',
       timestamp: currentTime,
-      status: 'sent'
+      status: 'sent',
+      imageUrl: selectedImage ? URL.createObjectURL(selectedImage) : undefined
     };
 
     setMessages(prev => [...prev, newMessage]);
@@ -60,7 +62,7 @@ const Narrate = () => {
       let endpoint = `http://localhost:8000/api/chat`;
       
       if (selectedImage) {
-        endpoint = `localhost:8000/api/image-summary`;
+        endpoint = `http://localhost:8000/api/image-summary`;
         formData.append('file', selectedImage, selectedImage.name);
       } else {
         formData.append('message', inputText);
@@ -191,6 +193,15 @@ const Narrate = () => {
                       : 'bg-gray-50 text-gray-800 shadow-gray-100'
                   } shadow-md transition-all duration-200 hover:shadow-lg`}
                 >
+                  {message.imageUrl && (
+                    <div className="mb-2">
+                      <img 
+                        src={message.imageUrl} 
+                        alt="Sent image" 
+                        className="rounded-lg max-w-full h-auto max-h-[200px] object-contain"
+                      />
+                    </div>
+                  )}
                   <div className="mb-1">{message.content}</div>
                   <div
                     className={`flex justify-between items-center text-xs ${
