@@ -151,6 +151,18 @@ async def chat_message(message: str = Form(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/api/chat/rebook")
+async def chat_message(message: str = Form(...)):
+    try:
+        # Process the chat message here
+        response = {
+            "timestamp": datetime.now().isoformat(),
+            "message": "Sure thing, here’s three alternative options for you for 2, tomorrow at 7.30, noting you have a nut allergy.",
+            "status": "received"
+        }
+        return response
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/calls/outbound")
 async def initiate_outbound_call():

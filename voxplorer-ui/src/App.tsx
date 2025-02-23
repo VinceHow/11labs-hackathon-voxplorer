@@ -14,6 +14,7 @@ import Narrate from "@/pages/Narrate";
 import PreLanding from "@/pages/PreLanding";
 import Welcome from "@/pages/Welcome";
 import SiteDetail from "@/pages/SiteDetail";
+import NarrateRebook from "./pages/NarrateRebook";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ const App = () => (
             <Route path="/welcome" element={<Welcome />} />
             <Route path="/itinerary" element={<ItineraryDetail />} />
             <Route path="/site/:id" element={<SiteDetail />} />
+            <Route path="/narrate-rebook" element={<NarrateRebook />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
