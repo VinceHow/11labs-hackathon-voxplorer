@@ -11,6 +11,7 @@ import ItineraryDetail from './pages/ItineraryDetail';
 import ManagePage from './pages/ManagePage';
 import NewBooking from "@/pages/NewBooking";
 import Narrate from "@/pages/Narrate";
+import PreLanding from "@/pages/PreLanding";
 
 const queryClient = new QueryClient();
 
@@ -23,7 +24,8 @@ const App = () => (
         <Navigation />
         <main className="pt-0 md:pt-16 pb-20 md:pb-6">
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<PreLanding />} />
+            <Route path="/home" element={<Index />} />
             <Route path="/schedule/:day/:scheduleIndex" element={<ScheduleDetail />} />
             <Route path="/itinerary" element={<ItineraryDetail />} />
             <Route path="/manage" element={<ManagePage />} />
