@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import { Mic, Send, Image as ImageIcon, X } from "lucide-react";
+import { Mic, Send, Image as ImageIcon, X, ChevronLeft, MessageSquare, Activity, Plus } from "lucide-react";
 
 interface Message {
   id: string;
@@ -160,139 +160,112 @@ const Narrate = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start p-6 bg-gradient-to-b from-blue-50 to-white">
-      <div className="w-full max-w-4xl">
-        <div className="flex items-center mb-8">
-          <Button 
-            variant="ghost" 
-            onClick={handleBack}
-            className="hover:bg-blue-100 transition-colors"
-          >
-            <span className="text-blue-600">←</span> Back
-          </Button>
-          <h1 className="text-3xl font-bold text-center flex-1 text-blue-900">
-            Narrate Your Journey
-          </h1>
+    <div className="min-h-screen bg-[#2F4F3A] p-6 flex flex-col">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-4">
+        <button onClick={handleBack} className="text-[#E8DFD0]">
+          <ChevronLeft className="h-6 w-6" />
+        </button>
+        <h1 className="text-2xl font-semibold text-[#E8DFD0]">Kyoto 2025</h1>
+        <button className="text-[#E8DFD0]">
+          <MessageSquare className="h-5 w-5" />
+        </button>
+      </div>
+
+      {/* Chat Container */}
+      <div className="flex-1 bg-[#E8DFD0] rounded-3xl p-4 overflow-y-auto mb-4">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-8 h-8 rounded-full bg-[#2F4F3A] flex items-center justify-center">
+            <Activity className="h-5 w-5 text-[#E8DFD0]" />
+          </div>
+          <span className="text-xl font-bold">Voxie</span>
         </div>
-        
-        <div className="bg-white rounded-2xl shadow-lg p-6 h-[600px] flex flex-col border border-gray-100">
-          {/* Messages Container */}
-          <div className="flex-1 overflow-y-auto mb-4 space-y-4 scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-transparent pr-2">
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex ${
-                  message.type === 'user' ? 'justify-end' : 'justify-start'
-                } animate-fade-in`}
-              >
-                <div
-                  className={`max-w-[70%] rounded-2xl p-4 ${
-                    message.type === 'user'
-                      ? 'bg-blue-500 text-white shadow-blue-100'
-                      : 'bg-gray-50 text-gray-800 shadow-gray-100'
-                  } shadow-md transition-all duration-200 hover:shadow-lg`}
-                >
-                  {message.imageUrl && (
-                    <div className="mb-2">
-                      <img 
-                        src={message.imageUrl} 
-                        alt="Sent image" 
-                        className="rounded-lg max-w-full h-auto max-h-[200px] object-contain"
-                      />
-                    </div>
-                  )}
-                  <div className="mb-1">{message.content}</div>
-                  <div
-                    className={`flex justify-between items-center text-xs ${
-                      message.type === 'user' ? 'text-blue-100' : 'text-gray-400'
-                    }`}
-                  >
-                    <span>
-                      {new Date(message.timestamp).toLocaleTimeString()}
-                    </span>
-                    {message.status && (
-                      <span className="ml-2">
-                        {message.status}
-                      </span>
-                    )}
-                  </div>
-                </div>
+
+        {messages.map((message) => (
+          <div
+            key={message.id}
+            className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} mb-2`}
+          >
+            <div className={`max-w-[80%] p-3 rounded-2xl ${
+              message.type === 'user' 
+                ? 'bg-[#2F4F3A] text-white' 
+                : 'bg-[#333333] text-white'
+            }`}>
+              {message.imageUrl && (
+                <img 
+                  src={message.imageUrl} 
+                  alt="Sent image" 
+                  className="w-full rounded-lg mb-1"
+                />
+              )}
+              <p className="text-sm leading-relaxed">{message.content}</p>
+              <div className={`text-[10px] mt-1 ${
+                message.type === 'user' ? 'text-gray-300' : 'text-gray-400'
+              }`}>
+                {new Date(message.timestamp).toLocaleTimeString()}
               </div>
-            ))}
-            <div ref={messagesEndRef} />
-          </div>
-
-          {/* Selected Image Preview */}
-          {selectedImage && (
-            <div className="relative inline-block mb-4">
-              <img
-                src={URL.createObjectURL(selectedImage)}
-                alt="Selected"
-                className="h-24 w-24 object-cover rounded-lg shadow-md"
-              />
-              <button
-                onClick={() => setSelectedImage(null)}
-                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1.5 shadow-lg hover:bg-red-600 transition-colors"
-              >
-                <X size={14} />
-              </button>
             </div>
-          )}
-
-          {/* Input Container */}
-          <div className="flex items-center gap-3 bg-gray-50 p-3 rounded-xl">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => fileInputRef.current?.click()}
-              className="hover:bg-blue-50 transition-colors"
-            >
-              <ImageIcon className="h-5 w-5 text-blue-500" />
-            </Button>
-            <input
-              type="file"
-              ref={fileInputRef}
-              className="hidden"
-              accept="image/*"
-              onChange={handleImageSelect}
-            />
-            
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={isRecording ? stopRecording : startRecording}
-              className={`transition-all duration-200 ${
-                isRecording 
-                  ? 'bg-red-500 text-white hover:bg-red-600' 
-                  : 'hover:bg-blue-50'
-              }`}
-            >
-              <Mic className={`h-5 w-5 ${isRecording ? 'text-white' : 'text-blue-500'}`} />
-            </Button>
-            
-            <input
-              type="text"
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              placeholder="Type your message..."
-              className="flex-1 bg-white border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') handleSendMessage();
-              }}
-            />
-            
-            <Button
-              onClick={handleSendMessage}
-              disabled={isLoading || (!inputText.trim() && !selectedImage)}
-              className={`bg-blue-500 hover:bg-blue-600 text-white transition-colors ${
-                isLoading || (!inputText.trim() && !selectedImage) 
-                  ? 'opacity-50 cursor-not-allowed' 
-                  : ''
-              }`}
-            >
-              <Send className="h-5 w-5" />
-            </Button>
           </div>
+        ))}
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* Selected Image Preview */}
+      {selectedImage && (
+        <div className="relative inline-block mb-2">
+          <img
+            src={URL.createObjectURL(selectedImage)}
+            alt="Selected"
+            className="h-20 w-20 object-cover rounded-lg"
+          />
+          <button
+            onClick={() => setSelectedImage(null)}
+            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
+          >
+            <X size={12} />
+          </button>
+        </div>
+      )}
+
+      {/* Input Bar */}
+      <div className="mt-4 relative">
+        <div className="bg-[#E8DFD0] rounded-full p-3 flex items-center gap-2">
+          <button 
+            className="w-7 h-7 rounded-full bg-[#9DC88D] flex items-center justify-center"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <Plus className="text-[#2F4F3A] w-4 h-4" />
+          </button>
+          <input
+            type="file"
+            ref={fileInputRef}
+            className="hidden"
+            accept="image/*"
+            onChange={handleImageSelect}
+          />
+          <input
+            type="text"
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            placeholder="Ask Voxie a question.."
+            className="flex-1 bg-transparent outline-none text-[#2F4F3A] placeholder-gray-500"
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') handleSendMessage();
+            }}
+          />
+          <button
+            onClick={isRecording ? stopRecording : startRecording}
+            className={`${isRecording ? 'text-red-500' : 'text-[#2F4F3A]'}`}
+          >
+            <Mic className="w-5 h-5" />
+          </button>
+          <button
+            onClick={handleSendMessage}
+            disabled={isLoading || (!inputText.trim() && !selectedImage)}
+            className={`${isLoading || (!inputText.trim() && !selectedImage) ? 'opacity-50' : ''}`}
+          >
+            <Send className="text-[#2F4F3A] w-5 h-5" />
+          </button>
         </div>
       </div>
     </div>
