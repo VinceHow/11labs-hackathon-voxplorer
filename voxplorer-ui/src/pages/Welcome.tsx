@@ -1,9 +1,11 @@
-import { ChevronLeft, MessageSquare, ChevronUp } from "lucide-react";
+import { useState } from 'react';
+import { ChevronLeft, MessageSquare, ChevronUp, ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import InputBar from "@/components/InputBar";
 import { IMAGES } from '@/constants/images';
 
 const Welcome = () => {
+  const [isExpanded, setIsExpanded] = useState(true);
   const navigate = useNavigate();
 
   return (
@@ -25,41 +27,63 @@ const Welcome = () => {
 
         {/* Directions Section */}
         <div className="border-2 border-[#2F4F3A] rounded-xl p-4 mb-4">
-          <div className="flex justify-between items-center">
+          <button 
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="w-full flex justify-between items-center"
+          >
             <h3 className="text-2xl font-bold">Directions</h3>
-            <ChevronUp className="h-6 w-6" />
-          </div>
+            {isExpanded ? (
+              <ChevronUp className="h-6 w-6" />
+            ) : (
+              <ChevronDown className="h-6 w-6" />
+            )}
+          </button>
 
           {/* Direction Steps */}
-          <div className="space-y-6 mt-4">
-            <div className="space-y-3">
-              <div className="flex items-start gap-3">
-                <div className="w-4 h-4 rounded-full bg-[#2F4F3A] mt-1"></div>
-                <p className="text-xl font-semibold">
-                  Follow the directions to Kansai Airport station
-                </p>
+          {isExpanded && (
+            <div className="space-y-6 mt-4">
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <div className="w-4 h-4 rounded-full bg-[#2F4F3A] mt-1"></div>
+                  <p className="text-xl font-semibold">
+                    Follow the directions to Kansai Airport station
+                  </p>
+                </div>
+                <img 
+                  src={IMAGES.TERMINAL_1}
+                  alt="Terminal 1 direction" 
+                  className="w-full rounded-xl border border-[#2F4F3A]"
+                />
               </div>
-              <img 
-                src={IMAGES.TERMINAL_1}
-                alt="Terminal 1 direction" 
-                className="w-full rounded-xl border border-[#2F4F3A]"
-              />
-            </div>
 
-            <div className="space-y-3">
-              <div className="flex items-start gap-3">
-                <div className="w-4 h-4 rounded-full bg-[#2F4F3A] mt-1"></div>
-                <p className="text-xl font-semibold">
-                  Please go across the pedestrian overpass and go to AEROPLAZA.
-                </p>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <div className="w-4 h-4 rounded-full bg-[#2F4F3A] mt-1"></div>
+                  <p className="text-xl font-semibold">
+                    Please go across the pedestrian overpass and go to AEROPLAZA.
+                  </p>
+                </div>
+                <img 
+                  src={IMAGES.AEROPLAZA}
+                  alt="Aeroplaza direction" 
+                  className="w-full rounded-xl border border-[#2F4F3A]"
+                />
               </div>
-              <img 
-                src={IMAGES.AEROPLAZA}
-                alt="Aeroplaza direction" 
-                className="w-full rounded-xl border border-[#2F4F3A]"
-              />
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <div className="w-4 h-4 rounded-full bg-[#2F4F3A] mt-1"></div>
+                  <p className="text-xl font-semibold">
+                    Please exit the airport and go to Times Car Rental.
+                  </p>
+                </div>
+                <img 
+                  src={IMAGES.RENTAL}
+                  alt="Car rental" 
+                  className="w-full rounded-xl border border-[#2F4F3A]"
+                />
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 
