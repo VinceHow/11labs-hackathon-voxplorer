@@ -21,7 +21,7 @@ const Welcome = () => {
 
       {/* Main Content */}
       <div className="bg-[#E8DFD0] rounded-3xl p-6 flex-1 flex flex-col">
-        <h2 className="text-4xl font-bold mb-8">Welcome to Kyoto!</h2>
+        <h2 className="text-2xl md:text-4xl font-bold mb-8 truncate text-center">Welcome to Kyoto!</h2>
 
         {/* Directions Section */}
         <div className="border-2 border-[#2F4F3A] rounded-xl p-4 mb-4">
