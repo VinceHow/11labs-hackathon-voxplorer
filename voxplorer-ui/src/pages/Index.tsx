@@ -71,7 +71,7 @@ const Index = () => {
 
       {/* Main Content */}
       <div className="bg-[#E8DFD0] rounded-3xl p-6 flex-1 flex flex-col">
-        <h2 className="text-4xl font-bold mb-8">Your Travel Plans</h2>
+        <h2 className="text-2xl md:text-4xl font-bold mb-8 truncate">Kyoto, Japan 2025</h2>
 
         {isLoading ? (
           <div className="flex items-center justify-center p-8">
