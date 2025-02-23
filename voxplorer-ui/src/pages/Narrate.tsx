@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import { Mic, Send, Image as ImageIcon, X, ChevronLeft, MessageSquare, Activity, Plus } from "lucide-react";
+import { Mic, Send, Image as ImageIcon, X, ChevronLeft, MessageSquare, Activity, Plus, ChevronRight } from "lucide-react";
 
 interface Message {
   id: string;
@@ -199,10 +199,20 @@ const Narrate = () => {
                 />
               )}
               <p className="text-sm leading-relaxed">{message.content}</p>
-              <div className={`text-[10px] mt-1 ${
-                message.type === 'user' ? 'text-gray-300' : 'text-gray-400'
-              }`}>
-                {new Date(message.timestamp).toLocaleTimeString()}
+              <div className="flex justify-between items-center mt-1">
+                <div className={`text-[10px] ${
+                  message.type === 'user' ? 'text-gray-300' : 'text-gray-400'
+                }`}>
+                  {new Date(message.timestamp).toLocaleTimeString()}
+                </div>
+                {message.type === 'assistant' && (
+                  <button 
+                    onClick={() => navigate('/site/1')}
+                    className="bg-[#9DC88D] text-[#2F4F3A] p-1 rounded-full"
+                  >
+                    <ChevronRight className="w-3 h-3" />
+                  </button>
+                )}
               </div>
             </div>
           </div>
