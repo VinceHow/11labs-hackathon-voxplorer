@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { API_BASE_URL } from "@/config/api";
-import { Clock, MapPin, FileText, Loader2 } from "lucide-react";
+import { Clock, MapPin, FileText, Loader2, Phone } from "lucide-react";
 
 interface Booking {
   time: string;  // Simple string type now
@@ -19,6 +19,7 @@ const NewBooking = () => {
   const [bookings, setBookings] = useState<BookingMap>({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isCallLoading, setIsCallLoading] = useState(false);
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -55,6 +56,28 @@ const NewBooking = () => {
     navigate(-1);
   };
 
+  const initiateCall = async () => {
+    try {
+      setIsCallLoading(true);
+      const response = await fetch(`http://localhost:8000/api/calls/outbound`, {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to initiate call');
+      }
+
+      // Show success message
+      alert('Call initiated successfully!');
+
+    } catch (error) {
+      console.error('Error initiating call:', error);
+      alert('Failed to initiate call. Please try again.');
+    } finally {
+      setIsCallLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-start p-6 bg-gradient-to-b from-white to-gray-50">
       <div className="w-full max-w-4xl">
@@ -63,6 +86,15 @@ const NewBooking = () => {
             Back
           </Button>
           <h1 className="text-3xl font-bold text-center flex-1">New Booking</h1>
+          <Button
+            variant="outline"
+            className="flex items-center gap-2"
+            onClick={initiateCall}
+            disabled={isCallLoading}
+          >
+            <Phone className="h-5 w-5" />
+            {isCallLoading ? 'Calling...' : 'Start Call'}
+          </Button>
         </div>
 
         {isLoading ? (
