@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { Sparkles, Plus, MessageSquare, Mic } from "lucide-react";
+import { Sparkles, Plus, MessageSquare, Mic, AudioLines } from "lucide-react";
+import InputBar from "@/components/InputBar";
 
 const PreLanding = () => {
   const navigate = useNavigate();
@@ -54,24 +55,7 @@ const PreLanding = () => {
       </div>
 
       {/* Bottom Input Bar */}
-      <div className="mt-auto pt-6">
-        <div className="bg-[#E8DFD0] rounded-full p-4 flex items-center gap-3">
-          <button className="w-8 h-8 rounded-full bg-[#9DC88D] flex items-center justify-center">
-            <Plus className="text-[#2F4F3A] w-5 h-5" />
-          </button>
-          <input
-            type="text"
-            placeholder="Ask Voxie a question.."
-            className="flex-1 bg-transparent outline-none text-[#2F4F3A] placeholder-gray-500"
-          />
-          <button>
-            <Mic className="text-[#2F4F3A] w-6 h-6" />
-          </button>
-          <button className="w-6">
-            <div className="w-1 h-6 bg-[#2F4F3A] rounded-full"></div>
-          </button>
-        </div>
-      </div>
+      <InputBar />
     </div>
   );
 };

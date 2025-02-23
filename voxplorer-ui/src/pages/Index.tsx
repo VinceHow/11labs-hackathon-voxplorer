@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronDown, MessageSquare } from "lucide-react";
+import { ChevronDown, MessageSquare, Mic, Plus, AudioLines } from "lucide-react";
 import TravelPlan from "@/components/TravelPlan";
 import FeatureCards from "@/components/FeatureCards";
+import InputBar from "@/components/InputBar";
+
 interface Schedule {
   time: string;
   activity: string;
@@ -54,7 +56,6 @@ const Index = () => {
     setIsExpanded(!isExpanded);
   };
 
-
   return (
     <div className="min-h-screen bg-[#2F4F3A] p-6 flex flex-col">
       {/* Header */}
@@ -99,30 +100,12 @@ const Index = () => {
           >
             Edit existing booking
           </button>
-          {/* <FeatureCards isExpanded={isExpanded} /> */}
-
+          <FeatureCards isExpanded={isExpanded} /> 
         </div>
       </div>
 
-      {/* Bottom Input Bar */}
-      <div className="mt-6 relative">
-        <div className="bg-[#E8DFD0] rounded-full p-4 flex items-center gap-3">
-          <button className="w-8 h-8 rounded-full bg-[#9DC88D] flex items-center justify-center">
-            <span className="text-[#2F4F3A] text-xl font-bold">+</span>
-          </button>
-          <input
-            type="text"
-            placeholder="Ask Voxie a question.."
-            className="flex-1 bg-transparent outline-none text-[#2F4F3A] placeholder-gray-500"
-          />
-          <button>
-            <div className="w-6 h-6 bg-[#9DC88D] rounded-full"></div>
-          </button>
-          <button onClick={toggleCards}>
-            <div className="w-6 h-6 bg-[#9DC88D] rounded-full"></div>
-          </button>
-        </div>
-      </div>
+      <InputBar onToggleCards={toggleCards} />
+      {/* {isExpanded && <FeatureCards isExpanded={isExpanded} />} */}
     </div>
   );
 };
